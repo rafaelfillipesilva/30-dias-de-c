@@ -103,8 +103,6 @@ Peça que o usuário entre com 10 notas e armazene-as em um `array` . Imprima na
 
 Faça um programa que peça valores que serão armazenados em 2 `arrays` e imprima na tela os elementos que estão em ambos ao mesmo tempo.
 
-**Sugestão** - Pergunte ao usuário o número de notas que ele quer colocar sendo no máximo 20 notas, onde metade destas ficará em um `array` e metade no outro.
-
 ## Pascal e seu triângulo top
 
 ### 9. piramide_numeros.c
