@@ -142,7 +142,7 @@ Escreva um programa que receba um número **N** que será passado para um funç�
 
 Você deverá criar um arquivo .txt em seu computador com algumas informações, tais como: nome de uma biblioteca, nome dos livros que ela possui, categoria de livros, etc. Utilizando do artifício de programação você terá de ler os dados desse .txt e mostrar na tela esses dados organizados.
 
-**Dicas →** Estude sobre a biblioteca `fstream`.
+**Dicas →** Estude sobre a biblioteca `fopen`.
 
 ## A biblioteca do Sr. Chiyoku
 
