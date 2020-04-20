@@ -119,7 +119,7 @@ Faça um programa que peça valores que serão armazenados em 2 `arrays` e impri
 
 ### 10. triangulo_de_pascal.c
 
-Imprima o padrão chamado de triangulo de pascal de acordo com a entrada de dados do usuário.Por exemplo: O usuario digita 4 então o triângulo de pascal terá 4 camadas
+Imprima um triângulo de pascal de 4 camadas. 
 
        1 
       1 1
@@ -136,13 +136,13 @@ Uma certa empresa quer catalogar os funcionários e suas respectivas funções. 
 
 Escreva um programa que receba um número **N** que será passado para um função responsável por alocar um espaço de memória de tamanho **N**.
 
-**Dicas →** Estude o que são ponteiros e pra que usar as funções `malloc`, `calloc` e `setmem`.
+**Dicas →** Estude o que são ponteiros e pra que usar as funções `malloc`, `calloc` e `memset`.
 
 ### 13. read_arq.c
 
 Você deverá criar um arquivo .txt em seu computador com algumas informações, tais como: nome de uma biblioteca, nome dos livros que ela possui, categoria de livros, etc. Utilizando do artifício de programação você terá de ler os dados desse .txt e mostrar na tela esses dados organizados.
 
-**Dicas →** Estude sobre a biblioteca `fopen`.
+**Dicas →** Estude sobre a função `fopen`.
 
 ## A biblioteca do Sr. Chiyoku
 
