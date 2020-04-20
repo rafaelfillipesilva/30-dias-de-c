@@ -8,7 +8,7 @@ BOOST_AUTO_TEST_SUITE(helloworld)
 
 BOOST_AUTO_TEST_CASE(output)
 {
-    expected_output expected{"Hello, World!"};
+    expected_output expected("Hello, World!");
     BOOST_REQUIRE_MESSAGE(expected, "Failed to create temporary output.");
 
     expected.run(run_helloworld);

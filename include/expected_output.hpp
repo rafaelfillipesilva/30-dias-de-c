@@ -1,6 +1,7 @@
 #ifndef EXPECTED_OUTPUT_30_DIAS_DE_C_I
 #define EXPECTED_OUTPUT_30_DIAS_DE_C_I
 
+#include <string>
 #include <string_view>
 #include "temporary_output.hpp"
 
