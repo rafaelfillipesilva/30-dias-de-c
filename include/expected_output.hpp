@@ -1,6 +1,7 @@
 #ifndef EXPECTED_OUTPUT_30_DIAS_DE_C_I
 #define EXPECTED_OUTPUT_30_DIAS_DE_C_I
 
+#include <cassert>
 #include <string>
 #include <string_view>
 #include "temporary_output.hpp"
@@ -31,11 +32,15 @@ public:
     template<class Function>
     auto run(Function fn)
     {
+        assert(m_tmp_file.is_open());
+
         return fn(m_tmp_file.file());
     }
 
     bool validate() const
     {
+        assert(m_tmp_file.is_open());
+
         FILE* fd = m_tmp_file.file();
         std::rewind(fd);
 
