@@ -30,7 +30,7 @@ public:
     }
 
     template<class Function>
-    auto run(Function fn)
+    decltype(auto) run(Function fn)
     {
         assert(m_tmp_file.is_open());
 
