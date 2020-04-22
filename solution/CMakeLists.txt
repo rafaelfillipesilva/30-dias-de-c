@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.13)
 
 add_subdirectory("1.helloworld")
 add_subdirectory("2.oi")
-# add_subdirectory("3.variables")
+add_subdirectory("3.variables")
 # add_subdirectory("4.pode_beber")
 # add_subdirectory("5.looooping")
 # add_subdirectory("6.velocidade")
