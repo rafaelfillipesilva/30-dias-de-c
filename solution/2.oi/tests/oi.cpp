@@ -35,7 +35,7 @@ BOOST_AUTO_TEST_CASE(empty_input)
 // The expected behavior is to truncate the input to the maximum allowed.
 BOOST_AUTO_TEST_CASE(very_long_input)
 {
-    constexpr std::string::size_type buffer_size = 255;
+    constexpr std::string::size_type buffer_size = 256;
     constexpr std::string::size_type test_length =   2 + (buffer_size - 1);
 
     std::string long_input(test_length, 'A');

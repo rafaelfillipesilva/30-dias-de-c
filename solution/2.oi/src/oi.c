@@ -2,7 +2,7 @@
 #include <assert.h>
 #include <string.h>
 
-#define MAX_NAME_LENGTH 255
+#define MAX_NAME_LENGTH 256
 
 void rtrim_line(char* line, size_t buffer_size)
 {
