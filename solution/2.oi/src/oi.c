@@ -28,6 +28,7 @@ void rtrim_line(char* line, size_t buffer_size)
 void run_oi(FILE* in, FILE* out)
 {
     assert((in != NULL) && (out != NULL));
+    assert(MAX_NAME_LENGTH >= 2);
 
     fprintf(out, "Digite seu nome: ");
 
