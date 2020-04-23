@@ -13,4 +13,4 @@ void run_oi(FILE* in, FILE* out);
 }
 #endif
 
-#endif // OI_30_DIAS_DE_C_2
+#endif /* OI_30_DIAS_DE_C_2 */

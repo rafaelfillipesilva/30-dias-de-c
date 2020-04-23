@@ -14,7 +14,7 @@ void rtrim_line(char* line, size_t buffer_size)
         {
             line[i] = '\0';
 
-            // Deals with Windows \r\n special case on non-VC.
+            /* Deals with Windows \r\n special case on non-VC. */
             if ((i >= 1) && ('\r' == line[i - 1]))
             {
                 line[i - 1] = '\0';

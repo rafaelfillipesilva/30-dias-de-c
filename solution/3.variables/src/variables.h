@@ -11,4 +11,4 @@ void run_variables();
 }
 #endif
 
-#endif // VARIABLES_30_DIAS_DE_C_3
+#endif /* VARIABLES_30_DIAS_DE_C_3 */

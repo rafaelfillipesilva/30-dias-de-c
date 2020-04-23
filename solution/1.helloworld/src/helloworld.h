@@ -13,4 +13,4 @@ void run_helloworld(FILE* out);
 }
 #endif
 
-#endif // HELLOWORLD_30_DIAS_DE_C_1
+#endif /* HELLOWORLD_30_DIAS_DE_C_1 */
