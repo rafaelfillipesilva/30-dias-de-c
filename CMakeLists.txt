@@ -30,5 +30,4 @@ if(BUILD_TESTING)
 endif()
 
 include_directories("include")
-
-add_subdirectory("solution")
+add_subdirectory("src")
