@@ -11,6 +11,8 @@ extern "C" {
 
 void rtrim_newline(char* line, size_t buffer_size);
 
+bool parse_signed(const char* str, size_t buffer_size, intmax_t* out);
+
 bool parse_unsigned(const char* str, size_t buffer_size, uintmax_t* out);
 
 #ifdef __cplusplus
