@@ -1,7 +1,6 @@
 #include "looooping.h"
 #include "utils/string_utils.h"
 #include <assert.h>
-#include <inttypes.h>
 #include <stdio.h>
 
 void run_looooping()

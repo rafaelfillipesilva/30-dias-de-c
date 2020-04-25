@@ -1,7 +1,6 @@
 #include "pode_beber.h"
 #include "utils/string_utils.h"
 #include <assert.h>
-#include <inttypes.h>
 #include <stdio.h>
 
 bool parse_age(const char* age_str, size_t buffer_size, uint16_t* age_out)

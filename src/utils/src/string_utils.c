@@ -2,7 +2,7 @@
 #include <assert.h>
 #include <ctype.h>
 #include <errno.h>
-#include <stdint.h>
+#include <inttypes.h>
 
 void rtrim_newline(char* line, size_t buffer_size)
 {
