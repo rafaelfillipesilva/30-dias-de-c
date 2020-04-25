@@ -20,10 +20,22 @@ BOOST_AUTO_TEST_CASE(valid_input)
     BOOST_CHECK(expect.validate());
 }
 
+BOOST_AUTO_TEST_CASE(blank_input)
+{
+    expected_io expect("\n", "Digite seu nome: "
+                             "Oi, ser sem nome.");
+
+    BOOST_REQUIRE_MESSAGE(expect.is_ready(), "Open temporary test streams.");
+
+    expect.run(run_oi);
+
+    BOOST_CHECK(expect.validate());
+}
+
 BOOST_AUTO_TEST_CASE(empty_input)
 {
     expected_io expect("", "Digite seu nome: "
-                           "\n" // should inject new line for empty names.
+                           "\n" // should add new line for empty input (ctrl+d).
                            "Oi, ser sem nome.");
 
     BOOST_REQUIRE_MESSAGE(expect.is_ready(), "Open temporary test streams.");
