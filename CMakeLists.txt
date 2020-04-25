@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.13)
 
 project("30-dias-de-c"
         VERSION "1.0"
-        DESCRIPTION "Solução dos deafios 30 dias de C do IO-Land."
+        DESCRIPTION "Solução, desnecessariamente complicada, dos desafios 30 dias de C do IO-Land."
         HOMEPAGE_URL "https://github.com/rafaelfillipesilva/30-dias-de-c"
         LANGUAGES C CXX)
 
