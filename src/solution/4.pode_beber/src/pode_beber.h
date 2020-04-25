@@ -10,7 +10,7 @@
 #define MIN_AGE_LENGTH 5
 
 // Extra length allows ignoring space (see: isspace()) characters.
-#define MAX_AGE_LENGTH 16
+#define MAX_AGE_LENGTH 32
 
 #define ADULT_AGE 18
 
