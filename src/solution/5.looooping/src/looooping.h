@@ -1,6 +1,8 @@
 #ifndef LOOOOPING_30_DIAS_DE_C_5
 #define LOOOOPING_30_DIAS_DE_C_5
 
+#define MAX_NUMBER_LENGTH 32
+
 #ifdef __cplusplus
 extern "C" {
 #endif
