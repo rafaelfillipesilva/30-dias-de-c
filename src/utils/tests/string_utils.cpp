@@ -18,6 +18,23 @@ BOOST_AUTO_TEST_CASE(test_rtrim_newline)
     BOOST_CHECK(result == test_str);
 }
 
+BOOST_AUTO_TEST_CASE(test_count_nonspace)
+{
+    auto test_case = [](std::string_view str, const size_t check)
+    {
+        size_t count = 0;
+        const bool success = count_nonspace(str.data(), str.size() + 1, &count);
+
+        return (success && (check == count));
+    };
+
+    BOOST_CHECK(test_case("test", 4));
+    BOOST_CHECK(test_case("  test  \r\n", 4));
+    BOOST_CHECK(test_case("te st", 4));
+    BOOST_CHECK(test_case("", 0));
+    BOOST_CHECK(test_case("  \r\n", 0));
+}
+
 BOOST_AUTO_TEST_CASE(test_parse_signed)
 {
     auto test_success = [](std::string_view str, const intmax_t check)

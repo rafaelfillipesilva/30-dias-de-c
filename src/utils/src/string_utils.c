@@ -25,6 +25,35 @@ void rtrim_newline(char* line, size_t buffer_size)
     }
 }
 
+bool count_nonspace(const char* str, size_t buffer_size, size_t* count)
+{
+    assert(str != NULL);
+
+    size_t counter = 0;
+
+    for (size_t i = 0; i < buffer_size; ++i)
+    {
+        if (str[i] != '\0')
+        {
+            if (!isspace(str[i]))
+            {
+                ++counter;
+            }
+        }
+        else
+        {
+            if (count != NULL)
+            {
+                *count = counter;
+            }
+
+            return true;
+        }
+    }
+
+    return false;
+}
+
 bool has_trailing_junk(const char* str, const char* endptr, size_t buffer_size)
 {
     assert((str != NULL) && (endptr != NULL));
@@ -52,23 +81,9 @@ bool can_parse_signed(const char* str, size_t buffer_size)
     assert(str != NULL);
 
     size_t counter = 0;
+    const bool count_success = count_nonspace(str, buffer_size, &counter);
 
-    for (size_t i = 0; i < buffer_size; ++i)
-    {
-        if (str[i] != '\0')
-        {
-            if (!isspace(str[i]))
-            {
-                ++counter;
-            }
-        }
-        else
-        {
-            return (counter > 0);
-        }
-    }
-
-    return false;
+    return (count_success && (counter > 0));
 }
 
 bool parse_signed(const char* str, size_t buffer_size, intmax_t* out)
