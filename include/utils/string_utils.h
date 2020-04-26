@@ -15,7 +15,7 @@ bool count_nonspace(const char* str, size_t buffer_size, size_t* count);
 
 bool parse_signed(const char* str, size_t buffer_size, intmax_t* out);
 bool parse_unsigned(const char* str, size_t buffer_size, uintmax_t* out);
-long double parse_double(const char* str, size_t buffer_size, long double* out);
+double parse_double(const char* str, size_t buffer_size, double* out);
 
 #ifdef __cplusplus
 }

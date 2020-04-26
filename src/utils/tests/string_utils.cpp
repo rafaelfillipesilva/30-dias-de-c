@@ -1,3 +1,5 @@
+#include <cmath>
+#include <limits>
 #include <string_view>
 #include <boost/test/unit_test.hpp>
 #include "utils/string_utils.h"
@@ -97,6 +99,47 @@ BOOST_AUTO_TEST_CASE(test_parse_unsigned)
     BOOST_CHECK(test_failure("twenty"));
     BOOST_CHECK(test_failure("twenty20"));
     BOOST_CHECK(test_failure("20twenty"));
+}
+
+BOOST_AUTO_TEST_CASE(test_parse_double)
+{
+    auto cmp_d = [](const double left, const double right)
+    {
+        constexpr auto epsilon = std::numeric_limits<double>::epsilon();
+        return (std::fabs(left - right) <= epsilon);
+    };
+
+    auto test_success = [&cmp_d](std::string_view str, const double check)
+    {
+        double result = 0;
+        const bool success = parse_double(str.data(), str.size()+1, &result);
+
+        return (success && cmp_d(check, result));
+    };
+
+    auto test_failure = [](std::string_view str)
+    {
+        double result = 0;
+        const bool success = parse_double(str.data(), str.size()+1, &result);
+
+        return !success;
+    };
+
+    BOOST_CHECK(test_success("20.123", 20.123));
+    BOOST_CHECK(test_success("+20.123", 20.123));
+    BOOST_CHECK(test_success("-20.123", -20.123));
+    BOOST_CHECK(test_success("  20.123  \r\n", 20.123));
+    BOOST_CHECK(test_failure("20.123 20.123"));
+    BOOST_CHECK(test_failure(""));
+    BOOST_CHECK(test_failure("  \r\n"));
+    BOOST_CHECK(test_failure("+"));
+    BOOST_CHECK(test_failure("-"));
+    BOOST_CHECK(test_failure("."));
+    BOOST_CHECK(test_failure("+."));
+    BOOST_CHECK(test_failure("-."));
+    BOOST_CHECK(test_failure("twenty.onetwothree"));
+    BOOST_CHECK(test_failure("twenty20.123"));
+    BOOST_CHECK(test_failure("20.123twenty"));
 }
 
 BOOST_AUTO_TEST_SUITE_END()

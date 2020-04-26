@@ -3,6 +3,8 @@
 #include <ctype.h>
 #include <errno.h>
 #include <inttypes.h>
+#include <math.h>
+#include <stdlib.h>
 
 void rtrim_newline(char* line, size_t buffer_size)
 {
@@ -165,6 +167,45 @@ bool parse_unsigned(const char* str, size_t buffer_size, uintmax_t* out)
 
     const bool has_error = ((result == 0) || (result == UINTMAX_MAX))
                            && (errno == ERANGE);
+
+    if (!has_error)
+    {
+        const bool has_junk = has_trailing_junk(str, end_ptr, buffer_size);
+
+        if (!has_junk)
+        {
+            *out = result;
+            return true;
+        }
+    }
+
+    return false;
+}
+
+bool can_parse_double(const char* str, size_t buffer_size)
+{
+    assert(str != NULL);
+
+    return can_parse_signed(str, buffer_size);
+}
+
+double parse_double(const char* str, size_t buffer_size, double* out)
+{
+    assert((str != NULL) && (out != NULL));
+
+    const bool can_parse = can_parse_double(str, buffer_size);
+
+    if (!can_parse)
+    {
+        return false;
+    }
+
+    errno = 0;
+
+    char* end_ptr = NULL;
+    const double result = strtod(str, &end_ptr);
+
+    const bool has_error = (errno == ERANGE);
 
     if (!has_error)
     {
