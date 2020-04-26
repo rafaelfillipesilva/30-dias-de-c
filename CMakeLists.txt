@@ -1,5 +1,11 @@
 cmake_minimum_required(VERSION 3.13)
 
+find_program(CCACHE_PROGRAM ccache)
+
+if(CCACHE_PROGRAM)
+    set_property(GLOBAL PROPERTY RULE_LAUNCH_COMPILE "${CCACHE_PROGRAM}")
+endif()
+
 project("30-dias-de-c"
         VERSION "1.0"
         DESCRIPTION "Solução, desnecessariamente complicada, dos desafios 30 dias de C do IO-Land."
