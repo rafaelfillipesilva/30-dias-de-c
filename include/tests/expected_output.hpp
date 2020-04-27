@@ -4,6 +4,7 @@
 #include <cassert>
 #include <string>
 #include <string_view>
+#include <type_traits>
 #include "temporary_file.hpp"
 
 class expected_output
@@ -27,6 +28,9 @@ public:
     template<class Function, class... Args>
     decltype(auto) run(Function fn, Args&&... args)
     {
+        static_assert(std::is_invocable_v<Function, FILE*, Args&&...>,
+                      "Requires a function(FILE* out, Args&&...).");
+
         clear_output();
 
         assert(m_tmp_out.is_open());
