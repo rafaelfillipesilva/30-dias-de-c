@@ -18,12 +18,12 @@ void run_velocidade()
     printf("Digite a velocidade (em m/s): ");
 
     char buffer[MAX_NUMBER_LENGTH] = { '\0' };
-    const char* ms_str = fgets(buffer, MAX_NUMBER_LENGTH, stdin);
+    const char* mps_str = fgets(buffer, MAX_NUMBER_LENGTH, stdin);
 
-    if (ms_str != NULL)
+    if (mps_str != NULL)
     {
         double mps = 0;
-        const bool ok = parse_double(ms_str, MAX_NUMBER_LENGTH, &mps);
+        const bool ok = parse_double(mps_str, MAX_NUMBER_LENGTH, &mps);
 
         if (ok)
         {
