@@ -5,11 +5,11 @@
 #include <stddef.h>
 #include <stdint.h>
 
-// Minimum expected age format size:
-// [0-999+]:3 + '\n':4 + '\0':5
+/* Minimum expected age format size:
+   [0-999+]:3 + '\n':4 + '\0':5 */
 #define MIN_AGE_LENGTH 5
 
-// Extra length allows ignoring space (see: isspace()) characters.
+/* Extra length allows ignoring space (see: isspace()) characters. */
 #define MAX_AGE_LENGTH 32
 
 #define ADULT_AGE 18
@@ -29,4 +29,4 @@ void run_pode_beber();
 }
 #endif
 
-#endif // PODE_BEBER_30_DIAS_DE_C_4
+#endif /* PODE_BEBER_30_DIAS_DE_C_4 */

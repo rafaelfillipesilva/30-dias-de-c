@@ -13,4 +13,4 @@ void run_looooping();
 }
 #endif
 
-#endif // LOOOOPING_30_DIAS_DE_C_5
+#endif /* LOOOOPING_30_DIAS_DE_C_5 */

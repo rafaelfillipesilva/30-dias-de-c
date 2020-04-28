@@ -15,4 +15,4 @@ void run_velocidade();
 }
 #endif
 
-#endif // VELOCIDADE_30_DIAS_DE_C_6
+#endif /* VELOCIDADE_30_DIAS_DE_C_6 */

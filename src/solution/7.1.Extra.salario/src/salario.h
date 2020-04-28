@@ -18,4 +18,4 @@ void run_salario();
 }
 #endif
 
-#endif // SALARIO_30_DIAS_DE_C_7_1
+#endif /* SALARIO_30_DIAS_DE_C_7_1 */
