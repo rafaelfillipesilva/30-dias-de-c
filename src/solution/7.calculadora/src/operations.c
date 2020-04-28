@@ -35,8 +35,8 @@ bool op_div(double left, double right, double* result)
     return true;
 }
 
-// Based on:
-// https://en.wikipedia.org/wiki/Fibonacci_number
+/* Based on:
+   https://en.wikipedia.org/wiki/Fibonacci_number */
 double calc_fibonacci(const double n)
 {
     if (n > 1)
