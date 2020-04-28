@@ -45,7 +45,7 @@ public:
 
     constexpr bool fail() const
     {
-        return !m_ok;
+        return !pass();
     }
 
 private:
