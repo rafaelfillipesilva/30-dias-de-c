@@ -15,7 +15,7 @@ auto test_output(Function fn, Args&&... args) -> result<std::string>
                   "Requires a function fn(FILE* out, Args&&...).");
 
     auto tmp_output = make_tmpfile();
-    std::FILE* out = tmp_output.get_fd();
+    auto out = tmp_output.get_fd();
 
     fn(out, std::forward<Args>(args)...);
 

@@ -24,13 +24,13 @@ struct operation
     template<class... Args>
     static auto test(Args&&... args) -> result<double>
     {
-        if (!query_operation().expect(Operands))
+        if (query_operation().is_not(Operands))
         {
             return {};
         }
 
         double value = 0.0;
-        bool ok = OperationFn(ID, std::forward<Args>(args)..., &value);
+        const bool ok = OperationFn(ID, std::forward<Args>(args)..., &value);
 
         return {ok, value};
     }

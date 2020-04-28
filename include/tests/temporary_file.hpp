@@ -33,7 +33,7 @@ public:
 
     explicit operator bool() const
     {
-        return static_cast<bool>(m_file);
+        return is_open();
     }
 
     std::FILE* get_fd() const
@@ -65,7 +65,7 @@ public:
     }
 
     template<class Data = std::string>
-    Data read(typename Data::size_type buffer_size = 256)
+    auto read(typename Data::size_type buffer_size = 256) -> Data
     {
         constexpr auto byte_size = sizeof(typename Data::value_type);
 
@@ -100,7 +100,7 @@ public:
     }
 
     template<class Data = std::string_view>
-    std::FILE* write(const Data& data)
+    auto write(const Data& data)
     {
         constexpr auto byte_size = sizeof(typename Data::value_type);
 
@@ -112,10 +112,10 @@ public:
         std::FILE* fd = m_file.get();
         std::rewind(fd);
 
-        std::fwrite(data.data(), byte_size, data.size(), fd);
+        auto count = std::fwrite(data.data(), byte_size, data.size(), fd);
         std::rewind(fd);
 
-        return fd;
+        return std::pair{fd, count};
     }
 
 private:

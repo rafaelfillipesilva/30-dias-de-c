@@ -33,15 +33,13 @@ BOOST_AUTO_TEST_CASE(empty_input)
 // The expected behavior is to truncate the input to the maximum allowed.
 BOOST_AUTO_TEST_CASE(very_long_input)
 {
-    constexpr std::string::size_type buffer_size = max_name_length;
-    constexpr std::string::size_type test_length = 2 + (buffer_size - 1);
+    constexpr auto buffer_size = max_name_length;
+    constexpr auto test_length = 2 + (buffer_size - 1);
 
-    std::string long_input(test_length, 'A');
+    auto long_input = std::string(test_length, 'A');
 
-    std::string long_output = "Digite seu nome: "
-                              "Oi, " + long_input + "\n";
-
-    auto test = test_io(long_input, run_oi);
+    auto long_output = "Digite seu nome: "
+                       "Oi, " + long_input + "\n";
 
     // Expected failure, long_output should contain truncated long_input.
     BOOST_CHECK(expect_io(std::move(long_input),

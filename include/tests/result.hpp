@@ -33,6 +33,11 @@ public:
         }
     }
 
+    constexpr bool is_not(const T& check) const
+    {
+        return !expect(check);
+    }
+
     constexpr bool pass() const
     {
         return m_ok;
