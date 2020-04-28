@@ -87,7 +87,8 @@ public:
             data.resize(offset + grow_size);
             auto n = std::fread(data.data()+offset, byte_size, buffer_size, fd);
 
-            data.resize(offset += (n * byte_size));
+            data.resize(offset + (n * byte_size));
+            offset = data.size();
 
             if (n == 0)
             {
