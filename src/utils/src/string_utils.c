@@ -189,7 +189,7 @@ bool can_parse_double(const char* str, size_t buffer_size)
     return can_parse_signed(str, buffer_size);
 }
 
-double parse_double(const char* str, size_t buffer_size, double* out)
+bool parse_double(const char* str, size_t buffer_size, double* out)
 {
     assert((str != NULL) && (out != NULL));
 
