@@ -27,7 +27,7 @@ void run_looooping()
                 {
                     printf("%lu\n", square);
                 }
-                else
+                else /* Unsigned integer overflow (not a good check). */
                 {
                     printf("Impossivel representar resultado.");
                     break;
