@@ -87,11 +87,9 @@ public:
             data.resize(offset + grow_size);
             auto n = std::fread(data.data()+offset, byte_size, buffer_size, fd);
 
-            if ((n > 0) && (n <= buffer_size))
-            {
-                data.resize(offset += (n * byte_size));
-            }
-            else
+            data.resize(offset += (n * byte_size));
+
+            if (n == 0)
             {
                 break;
             }
@@ -135,7 +133,7 @@ auto make_tmpfile()
     constexpr auto pattern = "io-30dc_%%%%-%%%%-%%%%-%%%%";
     auto path = bfs::temp_directory_path() / bfs::unique_path(pattern);
 
-    auto fd = std::fopen(path.c_str(), "w+x");
+    std::FILE* fd = std::fopen(path.c_str(), "w+x");
 
     if (!fd)
     {
