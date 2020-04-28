@@ -28,7 +28,7 @@ bool calcular_salario(uintmax_t horas_trabalhadas, uintmax_t* salario)
 
 void run_salario()
 {
-    assert(MAX_NUMBER_LENGTH >= 2);
+    static_assert(MAX_NUMBER_LENGTH >= 2, "Invalid buffer size.");
 
     printf("Digite o numero de horas trabalhadas: ");
 

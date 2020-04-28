@@ -4,7 +4,7 @@
 
 void run_oi(FILE* in, FILE* out)
 {
-    assert(MAX_NAME_LENGTH >= 2);
+    static_assert(MAX_NAME_LENGTH >= 2, "Invalid buffer size.");
     assert((in != NULL) && (out != NULL));
 
     fprintf(out, "Digite seu nome: ");

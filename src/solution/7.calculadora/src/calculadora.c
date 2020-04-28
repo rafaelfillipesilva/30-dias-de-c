@@ -87,7 +87,7 @@ bool get_operands(uintmax_t operation, uintmax_t* operands)
 
 void run_calculadora()
 {
-    assert(MAX_NUMBER_LENGTH >= 2);
+    static_assert(MAX_NUMBER_LENGTH >= 2, "Invalid buffer size.");
 
     char buffer[MAX_NUMBER_LENGTH] = { '\0' };
 

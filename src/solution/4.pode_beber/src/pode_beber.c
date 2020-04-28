@@ -5,7 +5,7 @@
 
 bool parse_age(const char* age_str, size_t buffer_size, uint16_t* age_out)
 {
-    assert(MAX_AGE <= UINT16_MAX);
+    static_assert(MAX_AGE <= UINT16_MAX, "Invalid age range.");
     assert((age_str != NULL) && (age_out != NULL));
 
     uintmax_t age = 0;
@@ -29,8 +29,8 @@ bool can_drink(uint16_t age)
 
 void run_pode_beber()
 {
-    assert(MAX_AGE_LENGTH >= 2);
-    assert(MAX_AGE_LENGTH >= MIN_AGE_LENGTH);
+    static_assert(MAX_AGE_LENGTH >= 2, "Invalid buffer size.");
+    static_assert(MAX_AGE_LENGTH >= MIN_AGE_LENGTH, "Invalid buffer size.");
 
     printf("Digite sua idade: ");
 

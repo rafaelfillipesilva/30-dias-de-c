@@ -5,7 +5,7 @@
 
 void run_looooping()
 {
-    assert(MAX_NUMBER_LENGTH >= 2);
+    static_assert(MAX_NUMBER_LENGTH >= 2, "Invalid buffer size.");
 
     printf("Digite o valor de N: ");
 
