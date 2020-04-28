@@ -2,76 +2,78 @@
 
 #include <string_view>
 #include <boost/test/unit_test.hpp>
+#include "tests/result.hpp"
 #include "pode_beber.h"
+
+namespace tests_30dc {
 
 inline constexpr std::uint16_t adult_age = ADULT_AGE;
 inline constexpr std::uint32_t max_age   = MAX_AGE;
 
-inline bool age_expect_success(std::string_view age, const uint16_t age_check)
+inline auto can_drink(uint16_t age) -> result<bool>
 {
-    uint16_t age_result = 0;
-    const bool success = parse_age(age.data(), age.size() + 1, &age_result);
-
-    return (success && (age_check == age_result));
+    return {::can_drink(age)};
 }
 
-inline bool age_expect_failure(std::string_view age)
+inline auto parse_age(std::string_view age) -> result<uint16_t>
 {
     uint16_t age_result = 0;
-    const bool success = parse_age(age.data(), age.size() + 1, &age_result);
+    const bool ok = ::parse_age(age.data(), age.size() + 1, &age_result);
 
-    return !success;
+    return {ok, age_result};
 }
 
 BOOST_AUTO_TEST_SUITE(pode_beber)
 
 BOOST_AUTO_TEST_CASE(age_underage)
 {
-    BOOST_CHECK(!can_drink(adult_age - 1));
+    BOOST_CHECK(can_drink(adult_age - 1).expect(false));
 }
 
 BOOST_AUTO_TEST_CASE(age_adult)
 {
-    BOOST_CHECK(can_drink(adult_age));
-    BOOST_CHECK(can_drink(adult_age + 1));
+    BOOST_CHECK(can_drink(adult_age).expect(true));
+    BOOST_CHECK(can_drink(adult_age + 1).expect(true));
 }
 
 BOOST_AUTO_TEST_CASE(parse_valid_age)
 {
-    BOOST_CHECK(age_expect_success("20", 20));
+    BOOST_CHECK(parse_age("20").expect(20));
 }
 
 BOOST_AUTO_TEST_CASE(parse_empty_age)
 {
-    BOOST_CHECK(age_expect_failure(""));
-    BOOST_CHECK(age_expect_failure("  \r\n"));
+    BOOST_CHECK(parse_age("").fail());
+    BOOST_CHECK(parse_age("  \r\n").fail());
 }
 
 BOOST_AUTO_TEST_CASE(parse_age_with_spaces)
 {
-    BOOST_CHECK(age_expect_success("  20  \r\n", 20));
+    BOOST_CHECK(parse_age("  20  \r\n").expect(20));
 }
 
 BOOST_AUTO_TEST_CASE(parse_too_high_age)
 {
-    BOOST_CHECK(age_expect_failure(std::to_string(max_age + 1)));
+    BOOST_CHECK(parse_age(std::to_string(max_age + 1)).fail());
 }
 
 BOOST_AUTO_TEST_CASE(parse_negative_age)
 {
-    BOOST_CHECK(age_expect_failure("-20"));
+    BOOST_CHECK(parse_age("-20").fail());
 }
 
 BOOST_AUTO_TEST_CASE(parse_invalid_age)
 {
-    BOOST_CHECK(age_expect_failure("20 20"));
-    BOOST_CHECK(age_expect_failure("twenty"));
-    BOOST_CHECK(age_expect_failure("twenty20"));
+    BOOST_CHECK(parse_age("20 20").fail());
+    BOOST_CHECK(parse_age("twenty").fail());
+    BOOST_CHECK(parse_age("twenty20").fail());
 }
 
 BOOST_AUTO_TEST_CASE(parse_age_with_text)
 {
-    BOOST_CHECK(age_expect_failure("20twent"));
+    BOOST_CHECK(parse_age("20twenty").fail());
 }
 
 BOOST_AUTO_TEST_SUITE_END()
+
+} // namespace tests_30dc

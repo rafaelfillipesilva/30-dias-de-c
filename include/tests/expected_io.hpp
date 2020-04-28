@@ -1,71 +1,53 @@
 #ifndef EXPECTED_IO_30_DIAS_DE_C_I
 #define EXPECTED_IO_30_DIAS_DE_C_I
 
-#include <cassert>
 #include <string>
-#include <string_view>
 #include <type_traits>
+#include "result.hpp"
 #include "temporary_file.hpp"
-#include "expected_output.hpp"
 
-class expected_io
+namespace tests_30dc {
+
+template<class Function, class... Args>
+auto test_io(std::string_view data,
+             Function fn, Args&&... args) -> result<std::string>
 {
-public:
-    expected_io(std::string in, std::string out)
-        : m_expected_in{std::move(in)}, m_expected_out{std::move(out)}
+    static_assert(std::is_invocable_v<Function, FILE*, FILE*, Args&&...>,
+                  "Requires a function fn(FILE* in, FILE* out, Args&&...).");
+
+    auto tmp_input = make_tmpfile();
+    std::FILE* in = tmp_input.write(data);
+
+    auto tmp_output = make_tmpfile();
+    std::FILE* out = tmp_output.get_fd();
+
+    fn(in, out, std::forward<Args>(args)...);
+
+    return {tmp_output.read()};
+}
+
+struct expect_io
+{
+    expect_io(std::string in, std::string out)
+        : m_in{std::move(in)}, m_out{std::move(out)} { }
+
+    template<class Function, class... Args>
+    bool test(Function fn, Args&&... args)
     {
-    }
-
-    expected_io(const expected_io&) = delete;
-    expected_io(expected_io&&) = delete;
-
-    expected_io& operator=(const expected_io&) = delete;
-    expected_io& operator=(expected_io&&) = delete;
-
-    bool is_ready() const
-    {
-        return (m_tmp_in.is_open() && m_expected_out.is_ready());
+        return test_io(m_in, fn, std::forward<Args>(args)...).expect(m_out);
     }
 
     template<class Function, class... Args>
-    decltype(auto) run(Function fn, Args&&... args)
+    bool fail(Function fn, Args&&... args)
     {
-        static_assert(std::is_invocable_v<Function, FILE*, FILE*, Args&&...>,
-                      "Requires a function(FILE* in, FILE* out, Args&&...).");
-
-        refresh_input();
-
-        assert(m_tmp_in.is_open() && m_expected_out.is_ready());
-
-        return m_expected_out.run([this, &fn, &args...](auto&& out)
-        {
-            return fn(m_tmp_in.get_file(),
-                      std::forward<decltype(out)>(out),
-                      std::forward<Args>(args)...);
-        });
-    }
-
-    bool validate()
-    {
-        return m_expected_out.validate();
+        return !test(fn, std::forward<Args>(args)...);
     }
 
 private:
-    void refresh_input()
-    {
-        if (m_tmp_in.reopen())
-        {
-            std::FILE* in = m_tmp_in.get_file();
-            std::fwrite(m_expected_in.data(), m_expected_in.size(), 1, in);
-            std::rewind(in);
-        }
-    }
-
-private:
-    temporary_file m_tmp_in;
-    std::string m_expected_in;
-
-    expected_output m_expected_out;
+    std::string m_in;
+    std::string m_out;
 };
+
+} // namespace tests_30dc
 
 #endif // EXPECTED_OUTPUT_30_DIAS_DE_C_I

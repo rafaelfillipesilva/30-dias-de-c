@@ -2,74 +2,163 @@
 #define TEMPORARY_FILE_30_DIAS_DE_C_I
 
 #include <cstdio>
-#include <iostream>
+#include <memory>
+#include <string>
 #include <boost/filesystem/exception.hpp>
 #include <boost/filesystem/operations.hpp>
 
+namespace tests_30dc {
+
+template<class Deleter>
 class temporary_file
 {
 public:
-    temporary_file()
-    {
-        try
-        {
-            m_path = boost::filesystem::temp_directory_path();
-            m_path /= boost::filesystem::unique_path(m_tmp_pattern);
+    temporary_file() = delete;
 
-            m_file = fopen(m_path.c_str(), "w+x");
-        }
-        catch (boost::filesystem::filesystem_error& err)
-        {
-            // Error handled by caller via is_open().
-            std::cerr << "Failed to create temporary file.\n"
-                      << "Error: "
-                      << err.what()
-                      << std::endl;
-        }
-    }
+    temporary_file(std::string path, std::unique_ptr<std::FILE, Deleter> file)
+        : m_path{std::move(path)}, m_file{std::move(file)} { }
+
+    ~temporary_file() = default;
+
+    temporary_file(temporary_file&&) = default;
+    temporary_file& operator=(temporary_file&&) = default;
 
     temporary_file(const temporary_file&) = delete;
-    temporary_file(temporary_file&&) = delete;
-
     temporary_file& operator=(const temporary_file&) = delete;
-    temporary_file& operator=(temporary_file&& other) = delete;
-
-    ~temporary_file()
-    {
-        if (m_file != NULL)
-        {
-            std::fclose(m_file);
-            std::remove(m_path.c_str());
-
-            m_file = NULL;
-        }
-    }
 
     bool is_open() const
     {
-        return (m_file != NULL);
+        return static_cast<bool>(m_file);
     }
 
-    bool reopen()
+    explicit operator bool() const
     {
-        if (is_open())
+        return static_cast<bool>(m_file);
+    }
+
+    std::FILE* get_fd() const
+    {
+        if (!is_open())
         {
-            m_file = std::freopen(m_path.c_str(), "w+", m_file);
+            throw std::runtime_error{"The temporary file is not open."};
         }
 
-        return is_open();
+        return m_file.get();
     }
 
-    std::FILE* get_file()
+    void reopen()
     {
-        return m_file;
+        if (!is_open())
+        {
+            throw std::runtime_error{"The temporary file is not open."};
+        }
+
+        std::FILE* fd = m_file.release();
+        fd = std::freopen(m_path.c_str(), "w+", fd);
+
+        if (!fd)
+        {
+            throw std::runtime_error{"Failed to reopen temporary stream."};
+        }
+
+        m_file.reset(fd);
+    }
+
+    template<class Data = std::string>
+    Data read(typename Data::size_type buffer_size = 256)
+    {
+        constexpr auto byte_size = sizeof(typename Data::value_type);
+
+        if (!is_open())
+        {
+            throw std::runtime_error{"The temporary file is not open."};
+        }
+
+        std::FILE* fd = m_file.get();
+        std::rewind(fd);
+
+        Data data;
+        auto offset = data.size();
+
+        auto grow_size = buffer_size * byte_size;
+
+        while (!std::feof(fd))
+        {
+            data.resize(offset + grow_size);
+            auto n = std::fread(data.data()+offset, byte_size, buffer_size, fd);
+
+            if ((n > 0) && (n <= buffer_size))
+            {
+                data.resize(offset += (n * byte_size));
+            }
+            else
+            {
+                break;
+            }
+        }
+
+        return data;
+    }
+
+    template<class Data = std::string_view>
+    std::FILE* write(const Data& data)
+    {
+        constexpr auto byte_size = sizeof(typename Data::value_type);
+
+        if (!is_open())
+        {
+            throw std::runtime_error{"The temporary file is not open."};
+        }
+
+        std::FILE* fd = m_file.get();
+        std::rewind(fd);
+
+        std::fwrite(data.data(), byte_size, data.size(), fd);
+        std::rewind(fd);
+
+        return fd;
     }
 
 private:
-    std::FILE* m_file = NULL;
-    boost::filesystem::path m_path;
-
-    static constexpr auto m_tmp_pattern = "io-30dc_%%%%-%%%%-%%%%-%%%%";
+    std::string m_path;
+    std::unique_ptr<std::FILE, Deleter> m_file;
 };
+
+template<class Deleter>
+temporary_file(std::string,
+               std::unique_ptr<std::FILE, Deleter>) -> temporary_file<Deleter>;
+
+auto make_tmpfile()
+{
+    namespace bfs = boost::filesystem;
+
+    constexpr auto pattern = "io-30dc_%%%%-%%%%-%%%%-%%%%";
+    auto path = bfs::temp_directory_path() / bfs::unique_path(pattern);
+
+    auto fd = std::fopen(path.c_str(), "w+x");
+
+    if (!fd)
+    {
+        throw std::runtime_error{"Failed to open temporary stream."};
+    }
+
+    std::string path_str = path.string();
+
+    auto deleter = [path_str](std::FILE* file)
+    {
+        if (file)
+        {
+            std::fclose(file);
+            std::remove(path_str.c_str());
+        }
+    };
+
+    return temporary_file{
+        path_str,
+        std::unique_ptr<std::FILE, decltype(deleter)>{fd, deleter}
+    };
+}
+
+} // namespace tests_30dc
 
 #endif // TEMPORARY_FILE_30_DIAS_DE_C_I

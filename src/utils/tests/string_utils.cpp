@@ -2,144 +2,116 @@
 #include <limits>
 #include <string_view>
 #include <boost/test/unit_test.hpp>
+#include "tests/result.hpp"
 #include "utils/string_utils.h"
+
+namespace tests_30dc {
 
 BOOST_AUTO_TEST_SUITE(string_utils)
 
-BOOST_AUTO_TEST_CASE(test_rtrim_newline)
+BOOST_AUTO_TEST_CASE(rtrim_newline)
 {
-    const std::string_view test_str = "test";
+    auto rtrim_newline = [](std::string str) -> result<std::string>
+    {
+        ::rtrim_newline(str.data(), str.size());
+        return {str.c_str()};
+    };
 
-    std::string test{test_str};
-
-    test.append("\r\n");
-    rtrim_newline(test.data(), test.size());
-
-    const std::string_view result = test.data();
-
-    BOOST_CHECK(result == test_str);
+    BOOST_CHECK(rtrim_newline("test\r\n").expect("test"));
 }
 
-BOOST_AUTO_TEST_CASE(test_count_nonspace)
+BOOST_AUTO_TEST_CASE(count_nonspace)
 {
-    auto test_case = [](std::string_view str, const size_t check)
+    auto count_nonspace = [](std::string_view str) -> result<size_t>
     {
         size_t count = 0;
-        const bool success = count_nonspace(str.data(), str.size() + 1, &count);
+        const bool ok = ::count_nonspace(str.data(), str.size() + 1, &count);
 
-        return (success && (check == count));
+        return {ok, count};
     };
 
-    BOOST_CHECK(test_case("test", 4));
-    BOOST_CHECK(test_case("  test  \r\n", 4));
-    BOOST_CHECK(test_case("te st", 4));
-    BOOST_CHECK(test_case("", 0));
-    BOOST_CHECK(test_case("  \r\n", 0));
+    BOOST_CHECK(count_nonspace("test").expect(4));
+    BOOST_CHECK(count_nonspace("  test  \r\n").expect(4));
+    BOOST_CHECK(count_nonspace("te st").expect(4));
+    BOOST_CHECK(count_nonspace("").expect(0));
+    BOOST_CHECK(count_nonspace("  \r\n").expect(0));
 }
 
-BOOST_AUTO_TEST_CASE(test_parse_signed)
+BOOST_AUTO_TEST_CASE(parse_signed)
 {
-    auto test_success = [](std::string_view str, const intmax_t check)
+    auto parse_signed = [](std::string_view str) -> result<intmax_t>
     {
-        intmax_t result = 0;
-        const bool success = parse_signed(str.data(), str.size()+1, &result);
+        intmax_t value = 0;
+        const bool ok = ::parse_signed(str.data(), str.size() + 1, &value);
 
-        return (success && (check == result));
+        return {ok, value};
     };
 
-    auto test_failure = [](std::string_view str)
-    {
-        intmax_t result = 0;
-        const bool success = parse_signed(str.data(), str.size()+1, &result);
-
-        return !success;
-    };
-
-    BOOST_CHECK(test_success("20", 20));
-    BOOST_CHECK(test_success("+20", 20));
-    BOOST_CHECK(test_success("-20", -20));
-    BOOST_CHECK(test_success("  20  \r\n", 20));
-    BOOST_CHECK(test_failure("20 20"));
-    BOOST_CHECK(test_failure(""));
-    BOOST_CHECK(test_failure("  \r\n"));
-    BOOST_CHECK(test_failure("+"));
-    BOOST_CHECK(test_failure("-"));
-    BOOST_CHECK(test_failure("twenty"));
-    BOOST_CHECK(test_failure("twenty20"));
-    BOOST_CHECK(test_failure("20twenty"));
+    BOOST_CHECK(parse_signed("20").expect(20));
+    BOOST_CHECK(parse_signed("+20").expect(20));
+    BOOST_CHECK(parse_signed("-20").expect(-20));
+    BOOST_CHECK(parse_signed("  20  \r\n").expect(20));
+    BOOST_CHECK(parse_signed("20 20").fail());
+    BOOST_CHECK(parse_signed("").fail());
+    BOOST_CHECK(parse_signed("  \r\n").fail());
+    BOOST_CHECK(parse_signed("+").fail());
+    BOOST_CHECK(parse_signed("-").fail());
+    BOOST_CHECK(parse_signed("twenty").fail());
+    BOOST_CHECK(parse_signed("twenty20").fail());
+    BOOST_CHECK(parse_signed("20twenty").fail());
 }
 
-BOOST_AUTO_TEST_CASE(test_parse_unsigned)
+BOOST_AUTO_TEST_CASE(parse_unsigned)
 {
-    auto test_success = [](std::string_view str, const uintmax_t check)
+    auto parse_unsigned = [](std::string_view str) -> result<uintmax_t>
     {
-        uintmax_t result = 0;
-        const bool success = parse_unsigned(str.data(), str.size()+1, &result);
+        uintmax_t value = 0;
+        const bool ok = ::parse_unsigned(str.data(), str.size() + 1, &value);
 
-        return (success && (check == result));
+        return {ok, value};
     };
 
-    auto test_failure = [](std::string_view str)
-    {
-        uintmax_t result = 0;
-        const bool success = parse_unsigned(str.data(), str.size()+1, &result);
-
-        return !success;
-    };
-
-    BOOST_CHECK(test_success("20", 20));
-    BOOST_CHECK(test_success("  20  \r\n", 20));
-    BOOST_CHECK(test_failure("20 20"));
-    BOOST_CHECK(test_failure(""));
-    BOOST_CHECK(test_failure("  \r\n"));
-    BOOST_CHECK(test_failure("+20"));
-    BOOST_CHECK(test_failure("-20"));
-    BOOST_CHECK(test_failure("+"));
-    BOOST_CHECK(test_failure("-"));
-    BOOST_CHECK(test_failure("twenty"));
-    BOOST_CHECK(test_failure("twenty20"));
-    BOOST_CHECK(test_failure("20twenty"));
+    BOOST_CHECK(parse_unsigned("20").expect(20));
+    BOOST_CHECK(parse_unsigned("  20  \r\n").expect(20));
+    BOOST_CHECK(parse_unsigned("20 20").fail());
+    BOOST_CHECK(parse_unsigned("").fail());
+    BOOST_CHECK(parse_unsigned("  \r\n").fail());
+    BOOST_CHECK(parse_unsigned("+20").fail());
+    BOOST_CHECK(parse_unsigned("-20").fail());
+    BOOST_CHECK(parse_unsigned("+").fail());
+    BOOST_CHECK(parse_unsigned("-").fail());
+    BOOST_CHECK(parse_unsigned("twenty").fail());
+    BOOST_CHECK(parse_unsigned("twenty20").fail());
+    BOOST_CHECK(parse_unsigned("20twenty").fail());
 }
 
-BOOST_AUTO_TEST_CASE(test_parse_double)
+BOOST_AUTO_TEST_CASE(parse_double)
 {
-    auto cmp_d = [](const double left, const double right)
+    auto parse_double = [](std::string_view str) -> result<double>
     {
-        constexpr auto epsilon = std::numeric_limits<double>::epsilon();
-        return (std::fabs(left - right) <= epsilon);
+        double value = 0;
+        const bool ok = ::parse_double(str.data(), str.size() + 1, &value);
+
+        return {ok, value};
     };
 
-    auto test_success = [&cmp_d](std::string_view str, const double check)
-    {
-        double result = 0;
-        const bool success = parse_double(str.data(), str.size()+1, &result);
-
-        return (success && cmp_d(check, result));
-    };
-
-    auto test_failure = [](std::string_view str)
-    {
-        double result = 0;
-        const bool success = parse_double(str.data(), str.size()+1, &result);
-
-        return !success;
-    };
-
-    BOOST_CHECK(test_success("20.123", 20.123));
-    BOOST_CHECK(test_success("+20.123", 20.123));
-    BOOST_CHECK(test_success("-20.123", -20.123));
-    BOOST_CHECK(test_success("  20.123  \r\n", 20.123));
-    BOOST_CHECK(test_failure("20.123 20.123"));
-    BOOST_CHECK(test_failure(""));
-    BOOST_CHECK(test_failure("  \r\n"));
-    BOOST_CHECK(test_failure("+"));
-    BOOST_CHECK(test_failure("-"));
-    BOOST_CHECK(test_failure("."));
-    BOOST_CHECK(test_failure("+."));
-    BOOST_CHECK(test_failure("-."));
-    BOOST_CHECK(test_failure("twenty.onetwothree"));
-    BOOST_CHECK(test_failure("twenty20.123"));
-    BOOST_CHECK(test_failure("20.123twenty"));
+    BOOST_CHECK(parse_double("20.123").expect(20.123));
+    BOOST_CHECK(parse_double("+20.123").expect(20.123));
+    BOOST_CHECK(parse_double("-20.123").expect(-20.123));
+    BOOST_CHECK(parse_double("  20.123  \r\n").expect(20.123));
+    BOOST_CHECK(parse_double("20.123 20.123").fail());
+    BOOST_CHECK(parse_double("").fail());
+    BOOST_CHECK(parse_double("  \r\n").fail());
+    BOOST_CHECK(parse_double("+").fail());
+    BOOST_CHECK(parse_double("-").fail());
+    BOOST_CHECK(parse_double(".").fail());
+    BOOST_CHECK(parse_double("+.").fail());
+    BOOST_CHECK(parse_double("-.").fail());
+    BOOST_CHECK(parse_double("twenty.onetwothree").fail());
+    BOOST_CHECK(parse_double("twenty20.123").fail());
+    BOOST_CHECK(parse_double("20.123twenty").fail());
 }
 
 BOOST_AUTO_TEST_SUITE_END()
+
+} // namespace tests_30dc

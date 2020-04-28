@@ -3,69 +3,53 @@
 #include <cmath>
 #include <limits>
 #include <boost/test/unit_test.hpp>
-#include "tests/number_utils.hpp"
+#include "tests/result.hpp"
 #include "operations.h"
 
+namespace tests_30dc {
+
 namespace operation {
-    class result
+
+template<uintmax_t ID, uintmax_t Operands, auto OperationFn>
+struct operation
+{
+    static auto query_operation() -> result<uintmax_t>
     {
-    public:
-        constexpr result(bool ok, double value) : m_ok{ok}, m_value{value} { }
+        uintmax_t operand_count = 0;
+        const bool ok = ::query_operation(ID, &operand_count);
 
-        constexpr bool expect(const double check)
-        {
-            return (m_ok && epsilon_cmp(check, m_value));
-        }
+        return {ok, operand_count};
+    }
 
-        constexpr static result failure()
-        {
-            return {false, 0.0};
-        }
-
-    private:
-        bool m_ok = false;
-        double m_value = 0.0;
-    };
-
-    template<uintmax_t ID, uintmax_t Operands, auto OperationFn>
-    struct operation
+    template<class... Args>
+    static auto test(Args&&... args) -> result<double>
     {
-        static bool test_operands()
+        if (!query_operation().expect(Operands))
         {
-            uintmax_t operand_count = 0;
-            const bool ok = query_operation(ID, &operand_count);
-
-            return (ok && (Operands == operand_count));
+            return {};
         }
 
-        template<class... Args>
-        static result test(Args&&... args)
-        {
-            if (!test_operands())
-            {
-                return result::failure();
-            }
+        double value = 0.0;
+        bool ok = OperationFn(ID, std::forward<Args>(args)..., &value);
 
-            double value = 0.0;
-            bool ok = OperationFn(ID, std::forward<Args>(args)..., &value);
+        return {ok, value};
+    }
+};
 
-            return {ok, value};
-        }
-    };
+template<uintmax_t ID>
+using binary_operation = operation<ID, OP_IN_BINARY, run_binary>;
 
-    template<uintmax_t ID>
-    using binary_operation = operation<ID, OP_IN_BINARY, run_binary>;
+template<uintmax_t ID>
+using unary_operation = operation<ID, OP_IN_UNARY, run_unary>;
 
-    template<uintmax_t ID>
-    using unary_operation = operation<ID, OP_IN_UNARY, run_unary>;
+using add = binary_operation<OP_ADD>;
+using sub = binary_operation<OP_SUB>;
+using mul = binary_operation<OP_MUL>;
+using div = binary_operation<OP_DIV>;
 
-    using add = binary_operation<OP_ADD>;
-    using sub = binary_operation<OP_SUB>;
-    using mul = binary_operation<OP_MUL>;
-    using div = binary_operation<OP_DIV>;
+using fib = unary_operation<OP_FIB>;
 
-    using fib = unary_operation<OP_FIB>;
-}
+} // namespace operation
 
 BOOST_AUTO_TEST_SUITE(calculadora)
 
@@ -80,3 +64,5 @@ BOOST_AUTO_TEST_CASE(operations)
 }
 
 BOOST_AUTO_TEST_SUITE_END()
+
+} // namespace tests_30dc

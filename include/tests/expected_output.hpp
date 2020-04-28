@@ -1,65 +1,27 @@
 #ifndef EXPECTED_OUTPUT_30_DIAS_DE_C_I
 #define EXPECTED_OUTPUT_30_DIAS_DE_C_I
 
-#include <cassert>
 #include <string>
-#include <string_view>
 #include <type_traits>
+#include "result.hpp"
 #include "temporary_file.hpp"
 
-class expected_output
+namespace tests_30dc {
+
+template<class Function, class... Args>
+auto test_output(Function fn, Args&&... args) -> result<std::string>
 {
-public:
-    expected_output(std::string expected) : m_expected_out{std::move(expected)}
-    {
-    }
+    static_assert(std::is_invocable_v<Function, FILE*, Args&&...>,
+                  "Requires a function fn(FILE* out, Args&&...).");
 
-    expected_output(const expected_output&) = delete;
-    expected_output(expected_output&&) = delete;
+    auto tmp_output = make_tmpfile();
+    std::FILE* out = tmp_output.get_fd();
 
-    expected_output& operator=(const expected_output&) = delete;
-    expected_output& operator=(expected_output&&) = delete;
+    fn(out, std::forward<Args>(args)...);
 
-    bool is_ready() const
-    {
-        return m_tmp_out.is_open();
-    }
+    return {tmp_output.read()};
+}
 
-    template<class Function, class... Args>
-    decltype(auto) run(Function fn, Args&&... args)
-    {
-        static_assert(std::is_invocable_v<Function, FILE*, Args&&...>,
-                      "Requires a function(FILE* out, Args&&...).");
-
-        clear_output();
-
-        assert(m_tmp_out.is_open());
-
-        return fn(m_tmp_out.get_file(), std::forward<Args>(args)...);
-    }
-
-    bool validate()
-    {
-        assert(m_tmp_out.is_open());
-
-        std::FILE* fd = m_tmp_out.get_file();
-        std::rewind(fd);
-
-        std::string output(m_expected_out.size(), '\0');
-        std::fread(output.data(), output.size(), 1, fd);
-
-        return (output == m_expected_out);
-    }
-
-private:
-    void clear_output()
-    {
-        m_tmp_out.reopen();
-    }
-
-private:
-    temporary_file m_tmp_out;
-    std::string m_expected_out;
-};
+} // namespace tests_30dc
 
 #endif // EXPECTED_OUTPUT_30_DIAS_DE_C_I

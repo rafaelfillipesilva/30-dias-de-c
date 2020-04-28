@@ -3,17 +3,26 @@
 #include <cmath>
 #include <limits>
 #include <boost/test/unit_test.hpp>
-#include "tests/number_utils.hpp"
+#include "tests/result.hpp"
 #include "velocidade.h"
+
+namespace tests_30dc {
+
+inline auto mps_to_kmph(double mps) -> result<double>
+{
+    return {::mps_to_kmph(mps)};
+}
 
 BOOST_AUTO_TEST_SUITE(velocidade)
 
 BOOST_AUTO_TEST_CASE(convert_mps_to_kmph)
 {
-    BOOST_CHECK(epsilon_cmp(mps_to_kmph(+10.0), +36.0));
-    BOOST_CHECK(epsilon_cmp(mps_to_kmph(-10.0), -36.0));
-    BOOST_CHECK(epsilon_cmp(mps_to_kmph(32.00), 115.2));
-    BOOST_CHECK(epsilon_cmp(mps_to_kmph(-0.00), +0.00));
+    BOOST_CHECK(mps_to_kmph(+10.0).expect(+36.0));
+    BOOST_CHECK(mps_to_kmph(-10.0).expect(-36.0));
+    BOOST_CHECK(mps_to_kmph(32.00).expect(115.2));
+    BOOST_CHECK(mps_to_kmph(-0.00).expect(+0.00));
 }
 
 BOOST_AUTO_TEST_SUITE_END()
+
+} // namespace tests_30dc
