@@ -24,7 +24,7 @@ public:
     constexpr auto transform(Function fn) const
     -> result<decltype(fn(std::declval<T>()))>
     {
-        if (m_ok)
+        if (pass())
         {
             return {fn(m_value)};
         }
@@ -39,11 +39,11 @@ public:
         if constexpr (std::is_floating_point_v<T>)
         {
             constexpr auto epsilon = std::numeric_limits<T>::epsilon();
-            return (m_ok && (std::fabs(m_value - check) <= epsilon));
+            return (pass() && (std::fabs(m_value - check) <= epsilon));
         }
         else
         {
-            return (m_ok && (m_value == check));
+            return (pass() && (m_value == check));
         }
     }
 

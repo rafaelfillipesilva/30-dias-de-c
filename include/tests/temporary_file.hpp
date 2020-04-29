@@ -13,12 +13,8 @@ template<class Deleter>
 class temporary_file
 {
 public:
-    temporary_file() = delete;
-
-    temporary_file(std::string path, std::unique_ptr<std::FILE, Deleter> file)
-        : m_path{std::move(path)}, m_file{std::move(file)} { }
-
-    ~temporary_file() = default;
+    explicit temporary_file(std::unique_ptr<std::FILE, Deleter> file)
+        : m_file{std::move(file)} { }
 
     temporary_file(temporary_file&&) = default;
     temporary_file& operator=(temporary_file&&) = default;
@@ -36,7 +32,7 @@ public:
         return is_open();
     }
 
-    std::FILE* get_fd() const
+    std::FILE* get_fd()
     {
         if (!is_open())
         {
@@ -46,22 +42,10 @@ public:
         return m_file.get();
     }
 
-    void reopen()
+    void rewind()
     {
-        if (!is_open())
-        {
-            throw std::runtime_error{"The temporary file is not open."};
-        }
-
-        std::FILE* fd = m_file.release();
-        fd = std::freopen(m_path.c_str(), "w+", fd);
-
-        if (!fd)
-        {
-            throw std::runtime_error{"Failed to reopen temporary stream."};
-        }
-
-        m_file.reset(fd);
+        auto fd = get_fd();
+        std::rewind(fd);
     }
 
     template<class Data = std::string>
@@ -69,18 +53,13 @@ public:
     {
         constexpr auto byte_size = sizeof(typename Data::value_type);
 
-        if (!is_open())
-        {
-            throw std::runtime_error{"The temporary file is not open."};
-        }
-
-        std::FILE* fd = m_file.get();
+        auto fd = get_fd();
         std::rewind(fd);
 
         Data data;
         auto offset = data.size();
 
-        auto grow_size = buffer_size * byte_size;
+        auto grow_size = (buffer_size * byte_size);
 
         while (!std::feof(fd))
         {
@@ -105,28 +84,13 @@ public:
     {
         constexpr auto byte_size = sizeof(typename Data::value_type);
 
-        if (!is_open())
-        {
-            throw std::runtime_error{"The temporary file is not open."};
-        }
-
-        std::FILE* fd = m_file.get();
-        std::rewind(fd);
-
-        auto count = std::fwrite(data.data(), byte_size, data.size(), fd);
-        std::rewind(fd);
-
-        return std::pair{fd, count};
+        auto fd = get_fd();
+        return std::fwrite(data.data(), byte_size, data.size(), fd);
     }
 
 private:
-    std::string m_path;
     std::unique_ptr<std::FILE, Deleter> m_file;
 };
-
-template<class Deleter>
-temporary_file(std::string,
-               std::unique_ptr<std::FILE, Deleter>) -> temporary_file<Deleter>;
 
 auto make_temporary_file()
 {
@@ -154,7 +118,6 @@ auto make_temporary_file()
     };
 
     return temporary_file{
-        path_str,
         std::unique_ptr<std::FILE, decltype(deleter)>{fd, deleter}
     };
 }

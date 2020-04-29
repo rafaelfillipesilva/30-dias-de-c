@@ -16,9 +16,12 @@ auto test_io(std::string_view data,
                   "Requires a function fn(FILE* in, FILE* out, Args&&...).");
 
     auto tmp_input = make_temporary_file();
-    auto [in, _] = tmp_input.write(data);
-
     auto tmp_output = make_temporary_file();
+
+    tmp_input.write(data);
+    tmp_input.rewind();
+
+    auto in = tmp_input.get_fd();
     auto out = tmp_output.get_fd();
 
     fn(in, out, std::forward<Args>(args)...);
