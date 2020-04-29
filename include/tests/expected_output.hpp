@@ -14,7 +14,7 @@ auto test_output(Function fn, Args&&... args) -> result<std::string>
     static_assert(std::is_invocable_v<Function, FILE*, Args&&...>,
                   "Requires a function fn(FILE* out, Args&&...).");
 
-    auto tmp_output = make_tmpfile();
+    auto tmp_output = make_temporary_file();
     auto out = tmp_output.get_fd();
 
     fn(out, std::forward<Args>(args)...);

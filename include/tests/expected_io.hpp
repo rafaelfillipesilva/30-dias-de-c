@@ -15,10 +15,10 @@ auto test_io(std::string_view data,
     static_assert(std::is_invocable_v<Function, FILE*, FILE*, Args&&...>,
                   "Requires a function fn(FILE* in, FILE* out, Args&&...).");
 
-    auto tmp_input = make_tmpfile();
+    auto tmp_input = make_temporary_file();
     auto [in, _] = tmp_input.write(data);
 
-    auto tmp_output = make_tmpfile();
+    auto tmp_output = make_temporary_file();
     auto out = tmp_output.get_fd();
 
     fn(in, out, std::forward<Args>(args)...);

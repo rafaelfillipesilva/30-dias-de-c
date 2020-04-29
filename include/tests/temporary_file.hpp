@@ -128,7 +128,7 @@ template<class Deleter>
 temporary_file(std::string,
                std::unique_ptr<std::FILE, Deleter>) -> temporary_file<Deleter>;
 
-auto make_tmpfile()
+auto make_temporary_file()
 {
     namespace bfs = boost::filesystem;
 
