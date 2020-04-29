@@ -20,6 +20,19 @@ public:
     constexpr result(bool ok, T value)
         : m_ok{ok}, m_value{std::move(value)} { }
 
+    template<class Function>
+    constexpr auto transform(Function fn) const
+    {
+        if (m_ok)
+        {
+            return result{fn(m_value)};
+        }
+        else
+        {
+            return result{};
+        }
+    }
+
     constexpr bool expect(const T& check) const
     {
         if constexpr (std::is_floating_point_v<T>)
