@@ -1,7 +1,7 @@
 #ifndef CALCULADORA_30_DIAS_DE_C_7
 #define CALCULADORA_30_DIAS_DE_C_7
 
-#define MAX_NUMBER_LENGTH 32
+#define MAX_NUMBER_LENGTH 32U
 
 #ifdef __cplusplus
 extern "C" {

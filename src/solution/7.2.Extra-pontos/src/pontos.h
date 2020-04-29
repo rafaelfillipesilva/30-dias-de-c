@@ -1,7 +1,7 @@
 #ifndef PONTOS_30_DIAS_DE_C_7_2
 #define PONTOS_30_DIAS_DE_C_7_2
 
-#define MAX_NUMBER_LENGTH 32
+#define MAX_NUMBER_LENGTH 32U
 
 #ifdef __cplusplus
 extern "C" {

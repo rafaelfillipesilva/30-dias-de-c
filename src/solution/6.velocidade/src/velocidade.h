@@ -1,7 +1,7 @@
 #ifndef VELOCIDADE_30_DIAS_DE_C_6
 #define VELOCIDADE_30_DIAS_DE_C_6
 
-#define MAX_NUMBER_LENGTH 32
+#define MAX_NUMBER_LENGTH 32U
 
 #ifdef __cplusplus
 extern "C" {

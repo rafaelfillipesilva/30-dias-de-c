@@ -5,17 +5,17 @@
 #include <stdint.h>
 
 /* Operation details: Operands */
-#define OP_IN_BINARY 2
-#define OP_IN_UNARY  1
+#define OP_IN_BINARY 2U
+#define OP_IN_UNARY  1U
 
 /* Binary operations */
-#define OP_ADD 0
-#define OP_SUB 1
-#define OP_MUL 2
-#define OP_DIV 3
+#define OP_ADD 0U
+#define OP_SUB 1U
+#define OP_MUL 2U
+#define OP_DIV 3U
 
 /* Unary operations */
-#define OP_FIB 4
+#define OP_FIB 4U
 
 #ifdef __cplusplus
 extern "C" {
