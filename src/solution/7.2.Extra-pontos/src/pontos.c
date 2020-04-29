@@ -30,7 +30,7 @@ bool get_number(char* buffer, size_t buffer_size, double* number)
     else
     {
         printf("\n");
-        printf("Nenhuma coordenada digitada.\n");
+        printf("Coordenada nao digitada.\n");
     }
 
     return success;

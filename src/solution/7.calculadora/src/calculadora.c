@@ -30,7 +30,7 @@ bool get_number(char* buffer, size_t buffer_size, double* number)
     else
     {
         printf("\n");
-        printf("Nenhum numero digitado.\n");
+        printf("Numero nao digitado.\n");
     }
 
     return success;
@@ -61,7 +61,7 @@ bool get_operation(char* buffer, size_t buffer_size, uintmax_t* operation)
     else
     {
         printf("\n");
-        printf("Nenhuma operacao digitada.\n");
+        printf("Operacao nao digitada.\n");
     }
 
     return success;
