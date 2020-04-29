@@ -22,14 +22,15 @@ public:
 
     template<class Function>
     constexpr auto transform(Function fn) const
+    -> result<decltype(fn(std::declval<T>()))>
     {
         if (m_ok)
         {
-            return result{fn(m_value)};
+            return {fn(m_value)};
         }
         else
         {
-            return result{};
+            return {};
         }
     }
 
