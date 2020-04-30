@@ -12,29 +12,31 @@ class result
 {
 public:
     constexpr result()
-        : m_ok{false} { }
+    : m_ok{false} { }
 
     constexpr result(T value)
-        : m_ok{true}, m_value{std::move(value)} { }
+    : m_ok{true}, m_value{std::move(value)} { }
 
     constexpr result(bool ok, T value)
-        : m_ok{ok}, m_value{std::move(value)} { }
+    : m_ok{ok}, m_value{std::move(value)} { }
 
-    template<class Function>
-    constexpr auto transform(Function fn) const
-    -> result<decltype(fn(std::declval<T>()))>
+    template<class Fn>
+    constexpr auto transform(Fn fn) const
     {
+        using result_type = result<decltype(fn(m_value))>;
+
         if (pass())
         {
-            return {fn(m_value)};
+            return result_type{fn(m_value)};
         }
         else
         {
-            return {};
+            return result_type{};
         }
     }
 
-    constexpr bool expect(const T& check) const
+    template<class U>
+    constexpr auto expect(const U& check) const -> bool
     {
         if constexpr (std::is_floating_point_v<T>)
         {
@@ -47,17 +49,18 @@ public:
         }
     }
 
-    constexpr bool is_not(const T& check) const
+    template<class U>
+    constexpr auto is_not(const U& check) const -> bool
     {
         return !expect(check);
     }
 
-    constexpr bool pass() const
+    constexpr auto pass() const -> bool
     {
         return m_ok;
     }
 
-    constexpr bool fail() const
+    constexpr auto fail() const -> bool
     {
         return !pass();
     }

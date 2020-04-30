@@ -10,44 +10,61 @@ namespace tests_30dc {
 
 namespace operation {
 
-template<uintmax_t ID, uintmax_t Operands, auto OperationFn>
-struct operation
+template<auto fn>
+class operation
 {
-    static auto query_operation() -> result<uintmax_t>
+public:
+    auto query_operation() const -> result<uintmax_t>
     {
-        uintmax_t operand_count = 0;
-        const bool ok = ::query_operation(ID, &operand_count);
+        uintmax_t operand_count = 0U;
+        const bool ok = ::query_operation(m_id, &operand_count);
 
         return {ok, operand_count};
     }
 
     template<class... Args>
-    static auto test(Args&&... args) -> result<double>
+    auto test(Args&&... args) const -> result<double>
     {
-        if (query_operation().is_not(Operands))
+        if (query_operation().expect(m_operands))
+        {
+            double value = 0.0;
+            const bool ok = fn(m_id, std::forward<Args>(args)..., &value);
+
+            return {ok, value};
+        }
+        else
         {
             return {};
         }
-
-        double value = 0.0;
-        const bool ok = OperationFn(ID, std::forward<Args>(args)..., &value);
-
-        return {ok, value};
     }
+
+protected:
+    constexpr operation(uintmax_t id, uintmax_t operands)
+    : m_id{id}, m_operands{operands} { }
+
+private:
+    const uintmax_t m_id = 0U;
+    const uintmax_t m_operands = 0U;
 };
 
-template<uintmax_t ID>
-using binary_operation = operation<ID, OP_IN_BINARY, run_binary>;
+class binary_operation : public operation<run_binary>
+{
+public:
+    constexpr binary_operation(uintmax_t id) : operation{id, OP_IN_BINARY} { }
+};
 
-template<uintmax_t ID>
-using unary_operation = operation<ID, OP_IN_UNARY, run_unary>;
+class unary_operation : public operation<run_unary>
+{
+public:
+    constexpr unary_operation(uintmax_t id) : operation{id, OP_IN_UNARY} { }
+};
 
-using add = binary_operation<OP_ADD>;
-using sub = binary_operation<OP_SUB>;
-using mul = binary_operation<OP_MUL>;
-using div = binary_operation<OP_DIV>;
+constexpr auto add = binary_operation{OP_ADD};
+constexpr auto sub = binary_operation{OP_SUB};
+constexpr auto mul = binary_operation{OP_MUL};
+constexpr auto div = binary_operation{OP_DIV};
 
-using fib = unary_operation<OP_FIB>;
+constexpr auto fib = unary_operation{OP_FIB};
 
 } // namespace operation
 
@@ -55,12 +72,12 @@ BOOST_AUTO_TEST_SUITE(calculadora)
 
 BOOST_AUTO_TEST_CASE(operations)
 {
-    BOOST_CHECK(operation::add::test(10.0, 10.0).expect( 20.0));
-    BOOST_CHECK(operation::sub::test(30.0, 15.0).expect( 15.0));
-    BOOST_CHECK(operation::mul::test(20.0, 20.0).expect(400.0));
-    BOOST_CHECK(operation::div::test(60.0, 12.0).expect(  5.0));
+    BOOST_CHECK(operation::add.test(10.0, 10.0).expect( 20.0));
+    BOOST_CHECK(operation::sub.test(30.0, 15.0).expect( 15.0));
+    BOOST_CHECK(operation::mul.test(20.0, 20.0).expect(400.0));
+    BOOST_CHECK(operation::div.test(60.0, 12.0).expect(  5.0));
 
-    BOOST_CHECK(operation::fib::test(9.0).expect(34.0));
+    BOOST_CHECK(operation::fib.test(9.0).expect(34.0));
 }
 
 BOOST_AUTO_TEST_SUITE_END()

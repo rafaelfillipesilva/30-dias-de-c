@@ -4,22 +4,25 @@
 #include <string>
 #include <type_traits>
 #include "result.hpp"
+#include "test_file.hpp"
 #include "temporary_file.hpp"
 
 namespace tests_30dc {
 
-template<class Function, class... Args>
-auto test_output(Function fn, Args&&... args) -> result<std::string>
+template<class Fn>
+auto test_output(Fn fn) -> result<std::string>
 {
-    static_assert(std::is_invocable_v<Function, FILE*, Args&&...>,
-                  "Requires a function fn(FILE* out, Args&&...).");
+    static_assert(std::is_invocable_v<Fn, FILE*>,
+                  "Requires a function Fn(FILE* out).");
 
     auto tmp_output = make_temporary_file();
-    auto out = tmp_output.get_fd();
 
-    fn(out, std::forward<Args>(args)...);
+    auto out = test_file{tmp_output.get_fd()};
 
-    return {tmp_output.read()};
+    fn(out.fd);
+    out.rewind();
+
+    return {out.read()};
 }
 
 } // namespace tests_30dc
