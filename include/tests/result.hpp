@@ -12,13 +12,13 @@ class result
 {
 public:
     constexpr result()
-    : m_ok{false} { }
+        : m_ok{false} { }
 
     constexpr result(T value)
-    : m_ok{true}, m_value{std::move(value)} { }
+        : m_ok{true}, m_value{std::move(value)} { }
 
     constexpr result(bool ok, T value)
-    : m_ok{ok}, m_value{std::move(value)} { }
+        : m_ok{ok}, m_value{std::move(value)} { }
 
     template<class Fn>
     constexpr auto transform(Fn fn) const

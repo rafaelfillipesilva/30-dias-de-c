@@ -9,24 +9,31 @@
 
 namespace tests_30dc {
 
-struct test_file
+class test_file
 {
-    std::FILE* fd = nullptr;
+public:
+    test_file(std::FILE* fd)
+        : m_fd{fd} { }
+
+    auto fd() const -> std::FILE*
+    {
+        return m_fd;
+    }
 
     void rewind()
     {
-        if (!fd)
+        if (!m_fd)
         {
             throw std::runtime_error{"Invalid file descriptior."};
         }
 
-        std::rewind(fd);
+        std::rewind(m_fd);
     }
 
     template<class T = std::string>
     auto read(std::size_t buffer_size = 256U) -> T
     {
-        if (!fd)
+        if (!m_fd)
         {
             throw std::runtime_error{"Invalid file descriptior."};
         }
@@ -39,12 +46,15 @@ struct test_file
         T data;
         constexpr auto byte_size = sizeof(byte_type);
 
-        while (!std::feof(fd))
+        while (!std::feof(m_fd))
         {
             auto offset = data.size();
 
             data.resize(offset + buffer_size);
-            auto n = std::fread(data.data()+offset, byte_size, buffer_size, fd);
+
+            auto n = std::fread(data.data() + offset,
+                                byte_size, buffer_size,
+                                m_fd);
 
             if (n < buffer_size)
             {
@@ -64,7 +74,7 @@ struct test_file
     template<class T = std::string_view>
     auto write(const T& data)
     {
-        if (!fd)
+        if (!m_fd)
         {
             throw std::runtime_error{"Invalid file descriptior."};
         }
@@ -76,8 +86,11 @@ struct test_file
 
         constexpr auto byte_size = sizeof(byte_type);
 
-        return std::fwrite(data.data(), byte_size, data.size(), fd);
+        return std::fwrite(data.data(), byte_size, data.size(), m_fd);
     }
+
+private:
+    std::FILE* m_fd = nullptr;
 };
 
 } // namespace tests_30dc

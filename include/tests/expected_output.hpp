@@ -19,7 +19,7 @@ auto test_output(Fn fn) -> result<std::string>
 
     auto out = test_file{tmp_output.get_fd()};
 
-    fn(out.fd);
+    fn(out.fd());
     out.rewind();
 
     return {out.read()};

@@ -25,7 +25,7 @@ auto test_io(std::string_view data, Fn fn) -> result<std::string>
     in.write(data);
     in.rewind();
 
-    fn(in.fd, out.fd);
+    fn(in.fd(), out.fd());
     out.rewind();
 
     return {out.read()};
@@ -34,7 +34,7 @@ auto test_io(std::string_view data, Fn fn) -> result<std::string>
 struct expect_io
 {
     expect_io(std::string in, std::string out)
-    : m_in{std::move(in)}, m_out{std::move(out)} { }
+        : m_in{std::move(in)}, m_out{std::move(out)} { }
 
     template<class Fn>
     auto test(Fn fn) -> bool

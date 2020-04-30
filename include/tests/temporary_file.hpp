@@ -13,7 +13,7 @@ class temporary_file
 {
 public:
     explicit temporary_file(std::unique_ptr<std::FILE, Deleter> file)
-    : m_file{std::move(file)} { }
+        : m_file{std::move(file)} { }
 
     temporary_file(temporary_file&&) = default;
     temporary_file& operator=(temporary_file&&) = default;
