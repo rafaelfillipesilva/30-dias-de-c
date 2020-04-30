@@ -40,7 +40,7 @@ public:
 
 protected:
     constexpr operation(uintmax_t id, uintmax_t operands)
-    : m_id{id}, m_operands{operands} { }
+        : m_id{id}, m_operands{operands} { }
 
 private:
     const uintmax_t m_id = 0U;
@@ -50,13 +50,15 @@ private:
 class binary_operation : public operation<run_binary>
 {
 public:
-    constexpr binary_operation(uintmax_t id) : operation{id, OP_IN_BINARY} { }
+    constexpr binary_operation(uintmax_t id)
+        : operation{id, OP_IN_BINARY} { }
 };
 
 class unary_operation : public operation<run_unary>
 {
 public:
-    constexpr unary_operation(uintmax_t id) : operation{id, OP_IN_UNARY} { }
+    constexpr unary_operation(uintmax_t id)
+        : operation{id, OP_IN_UNARY} { }
 };
 
 constexpr auto add = binary_operation{OP_ADD};
