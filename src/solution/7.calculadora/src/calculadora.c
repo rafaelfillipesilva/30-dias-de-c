@@ -8,7 +8,7 @@
 bool get_number(char* buffer, size_t buffer_size, double* number)
 {
     assert((buffer != NULL) && (number != NULL));
-    assert(buffer_size >= 2);
+    assert(buffer_size >= 2U);
 
     bool success = false;
 
@@ -39,7 +39,7 @@ bool get_number(char* buffer, size_t buffer_size, double* number)
 bool get_operation(char* buffer, size_t buffer_size, uintmax_t* operation)
 {
     assert((buffer != NULL) && (operation != NULL));
-    assert(buffer_size >= 2);
+    assert(buffer_size >= 2U);
 
     bool success = false;
 
@@ -87,12 +87,12 @@ bool get_operands(uintmax_t operation, uintmax_t* operands)
 
 void run_calculadora()
 {
-    static_assert(MAX_NUMBER_LENGTH >= 2, "Invalid buffer size.");
+    static_assert(MAX_NUMBER_LENGTH >= 2U, "Invalid buffer size.");
 
     char buffer[MAX_NUMBER_LENGTH] = { '\0' };
 
-    uintmax_t operation = 0;
-    uintmax_t operands  = 0;
+    uintmax_t operation = 0U;
+    uintmax_t operands  = 0U;
 
     for (;;)
     {

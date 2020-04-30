@@ -8,7 +8,7 @@
 bool get_number(char* buffer, size_t buffer_size, double* number)
 {
     assert((buffer != NULL) && (number != NULL));
-    assert(buffer_size >= 2);
+    assert(buffer_size >= 2U);
 
     bool success = false;
 
@@ -39,7 +39,7 @@ bool get_number(char* buffer, size_t buffer_size, double* number)
 bool get_ponto(char* buffer, size_t buffer_size, struct ponto* ponto)
 {
     assert((buffer != NULL) && (ponto != NULL));
-    assert(buffer_size >= 2);
+    assert(buffer_size >= 2U);
 
     bool success = false;
 
@@ -79,13 +79,13 @@ double calcular_distancia(struct ponto a, struct ponto b)
 
 void run_pontos()
 {
-    static_assert(MAX_NUMBER_LENGTH >= 2, "Invalid buffer size.");
+    static_assert(MAX_NUMBER_LENGTH >= 2U, "Invalid buffer size.");
 
     char buffer[MAX_NUMBER_LENGTH] = { '\0' };
 
     printf("Digite o ponto A:\n");
 
-    struct ponto ponto_a = {.x = 0, .y = 0};
+    struct ponto ponto_a = {.x = 0.0, .y = 0.0};
     const bool a_ok = get_ponto(buffer, MAX_NUMBER_LENGTH, &ponto_a);
 
     if (!a_ok)
@@ -96,7 +96,7 @@ void run_pontos()
     printf("\n");
     printf("Digite o ponto B:\n");
 
-    struct ponto ponto_b = {.x = 0, .y = 0};
+    struct ponto ponto_b = {.x = 0.0, .y = 0.0};
     const bool b_ok = get_ponto(buffer, MAX_NUMBER_LENGTH, &ponto_b);
 
     if (!b_ok)

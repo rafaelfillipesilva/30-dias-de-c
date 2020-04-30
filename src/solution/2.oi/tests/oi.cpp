@@ -34,7 +34,7 @@ BOOST_AUTO_TEST_CASE(empty_input)
 BOOST_AUTO_TEST_CASE(very_long_input)
 {
     constexpr auto buffer_size = max_name_length;
-    constexpr auto test_length = 2 + (buffer_size - 1);
+    constexpr auto test_length = 2U + (buffer_size - 1U);
 
     auto long_input = std::string(test_length, 'A');
 

@@ -10,16 +10,16 @@ void rtrim_newline(char* line, size_t buffer_size)
 {
     assert(line != NULL);
 
-    for (size_t i = 0; i < buffer_size; ++i)
+    for (size_t i = 0U; i < buffer_size; ++i)
     {
         if ('\n' == line[i])
         {
             line[i] = '\0';
 
             /* Deals with Windows \r\n special case on non-VC. */
-            if ((i >= 1) && ('\r' == line[i - 1]))
+            if ((i >= 1U) && ('\r' == line[i - 1U]))
             {
-                line[i - 1] = '\0';
+                line[i - 1U] = '\0';
             }
 
             break;
@@ -31,9 +31,9 @@ bool count_nonspace(const char* str, size_t buffer_size, size_t* count)
 {
     assert(str != NULL);
 
-    size_t counter = 0;
+    size_t counter = 0U;
 
-    for (size_t i = 0; i < buffer_size; ++i)
+    for (size_t i = 0U; i < buffer_size; ++i)
     {
         if (str[i] != '\0')
         {
@@ -82,10 +82,10 @@ bool can_parse_signed(const char* str, size_t buffer_size)
 {
     assert(str != NULL);
 
-    size_t counter = 0;
+    size_t counter = 0U;
     const bool count_success = count_nonspace(str, buffer_size, &counter);
 
-    return (count_success && (counter > 0));
+    return (count_success && (counter > 0U));
 }
 
 bool parse_signed(const char* str, size_t buffer_size, intmax_t* out)
@@ -125,9 +125,9 @@ bool can_parse_unsigned(const char* str, size_t buffer_size)
 {
     assert(str != NULL);
 
-    size_t counter = 0;
+    size_t counter = 0U;
 
-    for (size_t i = 0; i < buffer_size; ++i)
+    for (size_t i = 0U; i < buffer_size; ++i)
     {
         if (str[i] != '\0')
         {
@@ -142,7 +142,7 @@ bool can_parse_unsigned(const char* str, size_t buffer_size)
         }
         else
         {
-            return (counter > 0);
+            return (counter > 0U);
         }
     }
 

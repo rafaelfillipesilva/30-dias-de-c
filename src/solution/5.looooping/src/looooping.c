@@ -5,7 +5,7 @@
 
 void run_looooping()
 {
-    static_assert(MAX_NUMBER_LENGTH >= 2, "Invalid buffer size.");
+    static_assert(MAX_NUMBER_LENGTH >= 2U, "Invalid buffer size.");
 
     printf("Digite o valor de N: ");
 
@@ -14,12 +14,12 @@ void run_looooping()
 
     if (number_str != NULL)
     {
-        uintmax_t number = 0;
+        uintmax_t number = 0U;
         const bool ok = parse_unsigned(number_str, MAX_NUMBER_LENGTH, &number);
 
         if (ok)
         {
-            for (uintmax_t i = 0; i <= number; ++i)
+            for (uintmax_t i = 0U; i <= number; ++i)
             {
                 const uintmax_t square = (i * i);
 

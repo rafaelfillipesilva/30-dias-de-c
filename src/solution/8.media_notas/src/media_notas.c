@@ -10,7 +10,7 @@ double calc_average(double marks[], size_t count)
 
     double average = 0.0;
 
-    for (size_t i = 0; i < count; ++i)
+    for (size_t i = 0U; i < count; ++i)
     {
         average += (marks[i] / count);
     }
@@ -21,7 +21,7 @@ double calc_average(double marks[], size_t count)
 bool get_number(char* buffer, size_t buffer_size, double* number)
 {
     assert((buffer != NULL) && (number != NULL));
-    assert(buffer_size >= 2);
+    assert(buffer_size >= 2U);
 
     bool success = false;
 
@@ -51,7 +51,7 @@ bool get_number(char* buffer, size_t buffer_size, double* number)
 
 void run_media_notas()
 {
-    static_assert(MAX_NUMBER_LENGTH >= 2, "Invalid buffer size.");
+    static_assert(MAX_NUMBER_LENGTH >= 2U, "Invalid buffer size.");
 
     char buffer[MAX_NUMBER_LENGTH] = { '\0' };
 
@@ -59,7 +59,7 @@ void run_media_notas()
 
     for (size_t i = 0; i < MARK_COUNT; ++i)
     {
-        printf("Digite a %lu nota: ", (i + 1));
+        printf("Digite a %lu nota: ", (i + 1U));
         const bool ok = get_number(buffer, MAX_NUMBER_LENGTH, &marks[i]);
 
         if (!ok)

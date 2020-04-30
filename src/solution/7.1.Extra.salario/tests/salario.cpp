@@ -13,18 +13,18 @@ BOOST_AUTO_TEST_CASE(work_hours)
 {
     auto calcular_salario = [](uintmax_t hours) -> result<uintmax_t>
     {
-        uintmax_t salary = 0;
+        uintmax_t salary = 0U;
         const bool ok = ::calcular_salario(hours, &salary);
 
         return {ok, salary};
     };
 
-    BOOST_CHECK(calcular_salario(0).fail());
-    BOOST_CHECK(calcular_salario(1).fail());
+    BOOST_CHECK(calcular_salario(0U).fail());
+    BOOST_CHECK(calcular_salario(1U).fail());
 
-    BOOST_CHECK(calcular_salario(2).expect(0));
+    BOOST_CHECK(calcular_salario(2U).expect(0U));
 
-    BOOST_CHECK(calcular_salario(10).expect(64));
+    BOOST_CHECK(calcular_salario(10U).expect(64U));
 
     constexpr auto max = std::numeric_limits<uintmax_t>::max();
     BOOST_CHECK(calcular_salario(max).fail());

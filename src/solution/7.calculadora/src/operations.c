@@ -39,9 +39,9 @@ bool op_div(double left, double right, double* result)
    https://en.wikipedia.org/wiki/Fibonacci_number */
 double calc_fibonacci(const double n)
 {
-    if (n > 1)
+    if (n > 1.0)
     {
-        return (calc_fibonacci(n - 1) + calc_fibonacci(n - 2));
+        return (calc_fibonacci(n - 1.0) + calc_fibonacci(n - 2.0));
     }
     else
     {

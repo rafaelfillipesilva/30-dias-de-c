@@ -8,12 +8,12 @@ bool calcular_salario(uintmax_t horas_trabalhadas, uintmax_t* salario)
     assert(salario != NULL);
 
     /* Not applicable for the formula, results in uncorrect salary. */
-    if (horas_trabalhadas < 2)
+    if (horas_trabalhadas < 2U)
     {
         return false;
     }
 
-    const uintmax_t adjusted_hours = (horas_trabalhadas - 2);
+    const uintmax_t adjusted_hours = (horas_trabalhadas - 2U);
     const uintmax_t salary = (adjusted_hours * adjusted_hours);
 
     /* Unsigned integer overflow (not a good check). */
@@ -28,7 +28,7 @@ bool calcular_salario(uintmax_t horas_trabalhadas, uintmax_t* salario)
 
 void run_salario()
 {
-    static_assert(MAX_NUMBER_LENGTH >= 2, "Invalid buffer size.");
+    static_assert(MAX_NUMBER_LENGTH >= 2U, "Invalid buffer size.");
 
     printf("Digite o numero de horas trabalhadas: ");
 
@@ -37,12 +37,12 @@ void run_salario()
 
     if (horas_str != NULL)
     {
-        uintmax_t horas = 0;
+        uintmax_t horas = 0U;
         const bool ok = parse_unsigned(horas_str, MAX_NUMBER_LENGTH, &horas);
 
         if (ok)
         {
-            uintmax_t salario = 0;
+            uintmax_t salario = 0U;
             const bool success = calcular_salario(horas, &salario);
 
             if (success)
