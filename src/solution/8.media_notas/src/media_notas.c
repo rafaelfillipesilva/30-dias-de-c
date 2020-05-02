@@ -25,11 +25,11 @@ bool get_number(char* buffer, size_t buffer_size, double* number)
 
     bool success = false;
 
-    const char* number_str = fgets(buffer, buffer_size, stdin);
+    char const* number_str = fgets(buffer, buffer_size, stdin);
 
     if (number_str != NULL)
     {
-        const bool ok = parse_double(number_str, buffer_size, number);
+        bool const ok = parse_double(number_str, buffer_size, number);
 
         if (ok)
         {
@@ -60,6 +60,7 @@ void run_media_notas()
     for (size_t i = 0u; i < MARK_COUNT; ++i)
     {
         printf("Digite a %lu nota: ", (i + 1u));
+        bool const ok = get_number(buffer, MAX_NUMBER_LENGTH, &marks[i]);
 
         if (!ok)
         {
@@ -69,7 +70,7 @@ void run_media_notas()
 
     printf("\n");
 
-    const double average = calc_average(marks, MARK_COUNT);
+    double const average = calc_average(marks, MARK_COUNT);
 
     printf("Media: %f", average);
     printf("\n");

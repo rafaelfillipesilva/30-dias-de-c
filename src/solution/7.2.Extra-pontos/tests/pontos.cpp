@@ -13,7 +13,7 @@ BOOST_AUTO_TEST_CASE(distancia)
 {
     auto calcular_distancia = [](::ponto a, ::ponto b) -> result<double>
     {
-        const double distance = ::calcular_distancia(a, b);
+        double const distance = ::calcular_distancia(a, b);
         return {distance};
     };
 

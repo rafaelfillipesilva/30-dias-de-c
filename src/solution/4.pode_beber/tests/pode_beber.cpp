@@ -20,6 +20,7 @@ inline auto can_drink(uint16_t age) -> result<bool>
 inline auto parse_age(std::string_view age) -> result<uint16_t>
 {
     uint16_t age_result = 0u;
+    bool const ok = ::parse_age(age.data(), age.size() + 1u, &age_result);
 
     return {ok, age_result};
 }

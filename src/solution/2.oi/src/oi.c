@@ -17,6 +17,7 @@ void run_oi(FILE* in, FILE* out)
         rtrim_newline(name, MAX_NAME_LENGTH);
 
         size_t length = 0u;
+        bool const count_ok = count_nonspace(name, MAX_NAME_LENGTH, &length);
 
         if (count_ok)
         {

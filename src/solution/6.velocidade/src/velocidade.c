@@ -5,8 +5,8 @@
 
 double mps_to_kmph(double mps)
 {
-    const double seconds_to_hour = (60.0 * 60.0);
-    const double meters_to_kilometers = 1000.0;
+    double const seconds_to_hour = (60.0 * 60.0);
+    double const meters_to_kilometers = 1000.0;
 
     return mps * (seconds_to_hour / meters_to_kilometers);
 }
@@ -18,16 +18,16 @@ void run_velocidade()
     printf("Digite a velocidade (em m/s): ");
 
     char buffer[MAX_NUMBER_LENGTH] = { '\0' };
-    const char* mps_str = fgets(buffer, MAX_NUMBER_LENGTH, stdin);
+    char* const mps_str = fgets(buffer, MAX_NUMBER_LENGTH, stdin);
 
     if (mps_str != NULL)
     {
         double mps = 0.0;
-        const bool ok = parse_double(mps_str, MAX_NUMBER_LENGTH, &mps);
+        bool const ok = parse_double(mps_str, MAX_NUMBER_LENGTH, &mps);
 
         if (ok)
         {
-            const double kmph = mps_to_kmph(mps);
+            double const kmph = mps_to_kmph(mps);
             printf("%f km/h\n", kmph);
         }
         else

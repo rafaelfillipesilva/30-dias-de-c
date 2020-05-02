@@ -14,6 +14,7 @@ BOOST_AUTO_TEST_CASE(work_hours)
     auto calcular_salario = [](uintmax_t hours) -> result<uintmax_t>
     {
         uintmax_t salary = 0u;
+        bool const ok = ::calcular_salario(hours, &salary);
 
         return {ok, salary};
     };

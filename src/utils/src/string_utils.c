@@ -27,7 +27,7 @@ void rtrim_newline(char* line, size_t buffer_size)
     }
 }
 
-bool count_nonspace(const char* str, size_t buffer_size, size_t* count)
+bool count_nonspace(char const* str, size_t buffer_size, size_t* count)
 {
     assert(str != NULL);
 
@@ -56,12 +56,12 @@ bool count_nonspace(const char* str, size_t buffer_size, size_t* count)
     return false;
 }
 
-bool has_trailing_junk(const char* str, const char* endptr, size_t buffer_size)
+bool has_trailing_junk(char const* str, char const* endptr, size_t buffer_size)
 {
     assert((str != NULL) && (endptr != NULL));
     assert(endptr >= str);
 
-    const size_t offset = (endptr - str);
+    size_t const offset = (endptr - str);
 
     for (size_t i = offset; i < buffer_size; ++i)
     {
@@ -78,20 +78,21 @@ bool has_trailing_junk(const char* str, const char* endptr, size_t buffer_size)
     return false;
 }
 
-bool can_parse_signed(const char* str, size_t buffer_size)
+bool can_parse_signed(char const* str, size_t buffer_size)
 {
     assert(str != NULL);
 
     size_t counter = 0u;
+    bool const count_success = count_nonspace(str, buffer_size, &counter);
 
     return (count_success && (counter > 0u));
 }
 
-bool parse_signed(const char* str, size_t buffer_size, intmax_t* out)
+bool parse_signed(char const* str, size_t buffer_size, intmax_t* out)
 {
     assert((str != NULL) && (out != NULL));
 
-    const bool can_parse = can_parse_signed(str, buffer_size);
+    bool const can_parse = can_parse_signed(str, buffer_size);
 
     if (!can_parse)
     {
@@ -101,14 +102,14 @@ bool parse_signed(const char* str, size_t buffer_size, intmax_t* out)
     errno = 0;
 
     char* end_ptr = NULL;
-    const intmax_t result = strtoimax(str, &end_ptr, 10);
+    intmax_t const result = strtoimax(str, &end_ptr, 10);
 
-    const bool has_error = ((result == INTMAX_MIN) || (result == INTMAX_MAX))
+    bool const has_error = ((result == INTMAX_MIN) || (result == INTMAX_MAX))
                            && (errno == ERANGE);
 
     if (!has_error)
     {
-        const bool has_junk = has_trailing_junk(str, end_ptr, buffer_size);
+        bool const has_junk = has_trailing_junk(str, end_ptr, buffer_size);
 
         if (!has_junk)
         {
@@ -120,7 +121,7 @@ bool parse_signed(const char* str, size_t buffer_size, intmax_t* out)
     return false;
 }
 
-bool can_parse_unsigned(const char* str, size_t buffer_size)
+bool can_parse_unsigned(char const* str, size_t buffer_size)
 {
     assert(str != NULL);
 
@@ -148,11 +149,11 @@ bool can_parse_unsigned(const char* str, size_t buffer_size)
     return false;
 }
 
-bool parse_unsigned(const char* str, size_t buffer_size, uintmax_t* out)
+bool parse_unsigned(char const* str, size_t buffer_size, uintmax_t* out)
 {
     assert((str != NULL) && (out != NULL));
 
-    const bool can_parse = can_parse_unsigned(str, buffer_size);
+    bool const can_parse = can_parse_unsigned(str, buffer_size);
 
     if (!can_parse)
     {
@@ -162,14 +163,14 @@ bool parse_unsigned(const char* str, size_t buffer_size, uintmax_t* out)
     errno = 0;
 
     char* end_ptr = NULL;
-    const uintmax_t result = strtoumax(str, &end_ptr, 10);
+    uintmax_t const result = strtoumax(str, &end_ptr, 10);
 
-    const bool has_error = ((result == 0) || (result == UINTMAX_MAX))
+    bool const has_error = ((result == 0u) || (result == UINTMAX_MAX))
                            && (errno == ERANGE);
 
     if (!has_error)
     {
-        const bool has_junk = has_trailing_junk(str, end_ptr, buffer_size);
+        bool const has_junk = has_trailing_junk(str, end_ptr, buffer_size);
 
         if (!has_junk)
         {
@@ -181,18 +182,18 @@ bool parse_unsigned(const char* str, size_t buffer_size, uintmax_t* out)
     return false;
 }
 
-bool can_parse_double(const char* str, size_t buffer_size)
+bool can_parse_double(char const* str, size_t buffer_size)
 {
     assert(str != NULL);
 
     return can_parse_signed(str, buffer_size);
 }
 
-bool parse_double(const char* str, size_t buffer_size, double* out)
+bool parse_double(char const* str, size_t buffer_size, double* out)
 {
     assert((str != NULL) && (out != NULL));
 
-    const bool can_parse = can_parse_double(str, buffer_size);
+    bool const can_parse = can_parse_double(str, buffer_size);
 
     if (!can_parse)
     {
@@ -202,13 +203,13 @@ bool parse_double(const char* str, size_t buffer_size, double* out)
     errno = 0;
 
     char* end_ptr = NULL;
-    const double result = strtod(str, &end_ptr);
+    double const result = strtod(str, &end_ptr);
 
-    const bool has_error = (errno == ERANGE);
+    bool const has_error = (errno == ERANGE);
 
     if (!has_error)
     {
-        const bool has_junk = has_trailing_junk(str, end_ptr, buffer_size);
+        bool const has_junk = has_trailing_junk(str, end_ptr, buffer_size);
 
         if (!has_junk)
         {

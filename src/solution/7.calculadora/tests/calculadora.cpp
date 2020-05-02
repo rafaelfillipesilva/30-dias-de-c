@@ -38,6 +38,7 @@ public:
     auto query_operation() const -> result<uintmax_t>
     {
         uintmax_t operand_count = 0u;
+        bool const ok = ::query_operation(m_id, &operand_count);
 
         return {ok, operand_count};
     }
@@ -65,8 +66,8 @@ protected:
         : m_id{id}, m_operands{operands} { }
 
 private:
-    const uintmax_t m_id = 0U;
-    const uintmax_t m_operands = 0U;
+    uintmax_t const m_id = 0u;
+    uintmax_t const m_operands = 0u;
 };
 
 class [[nodiscard]] binary_operation : public operation<run_binary>

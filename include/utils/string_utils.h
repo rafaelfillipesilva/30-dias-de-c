@@ -11,11 +11,11 @@ extern "C" {
 
 void rtrim_newline(char* line, size_t buffer_size);
 
-bool count_nonspace(const char* str, size_t buffer_size, size_t* count);
+bool count_nonspace(char const* str, size_t buffer_size, size_t* count);
 
-bool parse_signed(const char* str, size_t buffer_size, intmax_t* out);
-bool parse_unsigned(const char* str, size_t buffer_size, uintmax_t* out);
-bool parse_double(const char* str, size_t buffer_size, double* out);
+bool parse_signed(char const* str, size_t buffer_size, intmax_t* out);
+bool parse_unsigned(char const* str, size_t buffer_size, uintmax_t* out);
+bool parse_double(char const* str, size_t buffer_size, double* out);
 
 #ifdef __cplusplus
 }

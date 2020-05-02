@@ -20,7 +20,7 @@
 extern "C" {
 #endif
 
-bool parse_age(const char* age_str, size_t buffer_size, uint16_t* age_out);
+bool parse_age(char const* age_str, size_t buffer_size, uint16_t* age_out);
 bool can_drink(uint16_t age);
 
 void run_pode_beber();

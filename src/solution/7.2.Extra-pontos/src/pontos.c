@@ -12,11 +12,11 @@ bool get_number(char* buffer, size_t buffer_size, double* number)
 
     bool success = false;
 
-    const char* number_str = fgets(buffer, buffer_size, stdin);
+    char const* number_str = fgets(buffer, buffer_size, stdin);
 
     if (number_str != NULL)
     {
-        const bool ok = parse_double(number_str, buffer_size, number);
+        bool const ok = parse_double(number_str, buffer_size, number);
 
         if (ok)
         {
@@ -44,12 +44,12 @@ bool get_ponto(char* buffer, size_t buffer_size, struct ponto* ponto)
     bool success = false;
 
     printf("x: ");
-    const bool x_ok = get_number(buffer, buffer_size, &ponto->x);
+    bool const x_ok = get_number(buffer, buffer_size, &ponto->x);
 
     if (x_ok)
     {
         printf("y: ");
-        const bool y_ok = get_number(buffer, buffer_size, &ponto->y);
+        bool const y_ok = get_number(buffer, buffer_size, &ponto->y);
 
         if (y_ok)
         {
@@ -64,15 +64,15 @@ bool get_ponto(char* buffer, size_t buffer_size, struct ponto* ponto)
    https://en.wikipedia.org/wiki/Distance */
 double calcular_distancia(struct ponto a, struct ponto b)
 {
-    const double dx = (b.x - a.x);
-    const double dy = (b.y - a.y);
+    double const dx = (b.x - a.x);
+    double const dy = (b.y - a.y);
 
-    const double dx_square = (dx * dx);
-    const double dy_square = (dy * dy);
+    double const dx_square = (dx * dx);
+    double const dy_square = (dy * dy);
 
-    const double square_sum = (dx_square + dy_square);
+    double const square_sum = (dx_square + dy_square);
 
-    const double distance = sqrt(square_sum);
+    double const distance = sqrt(square_sum);
 
     return distance;
 }
@@ -86,7 +86,7 @@ void run_pontos()
     printf("Digite o ponto A:\n");
 
     struct ponto ponto_a = {.x = 0.0, .y = 0.0};
-    const bool a_ok = get_ponto(buffer, MAX_NUMBER_LENGTH, &ponto_a);
+    bool const a_ok = get_ponto(buffer, MAX_NUMBER_LENGTH, &ponto_a);
 
     if (!a_ok)
     {
@@ -97,7 +97,7 @@ void run_pontos()
     printf("Digite o ponto B:\n");
 
     struct ponto ponto_b = {.x = 0.0, .y = 0.0};
-    const bool b_ok = get_ponto(buffer, MAX_NUMBER_LENGTH, &ponto_b);
+    bool const b_ok = get_ponto(buffer, MAX_NUMBER_LENGTH, &ponto_b);
 
     if (!b_ok)
     {
@@ -106,7 +106,7 @@ void run_pontos()
 
     printf("\n");
 
-    const double distancia = calcular_distancia(ponto_a, ponto_b);
+    double const distancia = calcular_distancia(ponto_a, ponto_b);
 
     printf("Distancia: %f", distancia);
     printf("\n");

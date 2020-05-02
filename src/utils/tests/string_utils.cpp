@@ -25,6 +25,7 @@ BOOST_AUTO_TEST_CASE(count_nonspace)
     auto count_nonspace = [](std::string_view str) -> result<size_t>
     {
         size_t count = 0u;
+        bool const ok = ::count_nonspace(str.data(), str.size() + 1u, &count);
 
         return {ok, count};
     };
@@ -41,7 +42,7 @@ BOOST_AUTO_TEST_CASE(parse_signed)
     auto parse_signed = [](std::string_view str) -> result<intmax_t>
     {
         intmax_t value = 0;
-        const bool ok = ::parse_signed(str.data(), str.size() + 1U, &value);
+        bool const ok = ::parse_signed(str.data(), str.size() + 1u, &value);
 
         return {ok, value};
     };
@@ -65,6 +66,7 @@ BOOST_AUTO_TEST_CASE(parse_unsigned)
     auto parse_unsigned = [](std::string_view str) -> result<uintmax_t>
     {
         uintmax_t value = 0u;
+        bool const ok = ::parse_unsigned(str.data(), str.size() + 1u, &value);
 
         return {ok, value};
     };
@@ -88,6 +90,7 @@ BOOST_AUTO_TEST_CASE(parse_double)
     auto parse_double = [](std::string_view str) -> result<double>
     {
         double value = 0.0;
+        bool const ok = ::parse_double(str.data(), str.size() + 1u, &value);
 
         return {ok, value};
     };

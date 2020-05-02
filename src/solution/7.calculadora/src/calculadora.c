@@ -12,11 +12,11 @@ bool get_number(char* buffer, size_t buffer_size, double* number)
 
     bool success = false;
 
-    const char* number_str = fgets(buffer, buffer_size, stdin);
+    char const* number_str = fgets(buffer, buffer_size, stdin);
 
     if (number_str != NULL)
     {
-        const bool ok = parse_double(number_str, buffer_size, number);
+        bool const ok = parse_double(number_str, buffer_size, number);
 
         if (ok)
         {
@@ -43,11 +43,11 @@ bool get_operation(char* buffer, size_t buffer_size, uintmax_t* operation)
 
     bool success = false;
 
-    const char* operation_str = fgets(buffer, buffer_size, stdin);
+    char const* operation_str = fgets(buffer, buffer_size, stdin);
 
     if (operation_str != NULL)
     {
-        const bool ok = parse_unsigned(operation_str, buffer_size, operation);
+        bool const ok = parse_unsigned(operation_str, buffer_size, operation);
 
         if (ok)
         {
@@ -71,7 +71,7 @@ bool get_operands(uintmax_t operation, uintmax_t* operands)
 {
     assert(operands != NULL);
 
-    const bool success = query_operation(operation, operands);
+    bool const success = query_operation(operation, operands);
 
     assert(!success || (success
                         && ((OP_IN_BINARY == *operands) ||
@@ -100,11 +100,11 @@ void run_calculadora()
         show_operations();
 
         printf("> ");
-        const bool op_ok = get_operation(buffer, MAX_NUMBER_LENGTH, &operation);
+        bool const op_ok = get_operation(buffer, MAX_NUMBER_LENGTH, &operation);
 
         if (op_ok)
         {
-            const bool query_ok = get_operands(operation, &operands);
+            bool const query_ok = get_operands(operation, &operands);
 
             if (query_ok)
             {
@@ -124,12 +124,12 @@ void run_calculadora()
     {
         double left_number = 0.0;
         printf("Digite o primeiro numero: ");
-        const bool n1_ok = get_number(buffer, MAX_NUMBER_LENGTH, &left_number);
+        bool const n1_ok = get_number(buffer, MAX_NUMBER_LENGTH, &left_number);
         if (!n1_ok) return;
 
         double right_number = 0.0;
         printf("Digite o segundo numero: ");
-        const bool n2_ok = get_number(buffer, MAX_NUMBER_LENGTH, &right_number);
+        bool const n2_ok = get_number(buffer, MAX_NUMBER_LENGTH, &right_number);
         if (!n2_ok) return;
 
         success = run_binary(operation, left_number, right_number, &result);
@@ -138,7 +138,7 @@ void run_calculadora()
     {
         double left_number = 0.0;
         printf("Digite o primeiro numero: ");
-        const bool n1_ok = get_number(buffer, MAX_NUMBER_LENGTH, &left_number);
+        bool const n1_ok = get_number(buffer, MAX_NUMBER_LENGTH, &left_number);
         if (!n1_ok) return;
 
         success = run_unary(operation, left_number, &result);

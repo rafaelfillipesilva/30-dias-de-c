@@ -15,12 +15,13 @@ void run_looooping()
     if (number_str != NULL)
     {
         uintmax_t number = 0u;
+        bool const ok = parse_unsigned(number_str, MAX_NUMBER_LENGTH, &number);
 
         if (ok)
         {
             for (uintmax_t i = 0u; i <= number; ++i)
             {
-                const uintmax_t square = (i * i);
+                uintmax_t const square = (i * i);
 
                 if (square >= i)
                 {
