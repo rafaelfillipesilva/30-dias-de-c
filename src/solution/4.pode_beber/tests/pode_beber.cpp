@@ -10,11 +10,13 @@ namespace tests_30dc {
 inline constexpr std::uint16_t adult_age = ADULT_AGE;
 inline constexpr std::uint32_t max_age   = MAX_AGE;
 
+[[nodiscard]]
 inline auto can_drink(uint16_t age) -> result<bool>
 {
     return {::can_drink(age)};
 }
 
+[[nodiscard]]
 inline auto parse_age(std::string_view age) -> result<uint16_t>
 {
     uint16_t age_result = 0U;

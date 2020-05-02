@@ -10,10 +10,31 @@ namespace tests_30dc {
 
 namespace operation {
 
-template<auto fn>
-class operation
+template<typename T>
+concept Operand = std::is_convertible_v<T, double>;
+
+template<typename Fn>
+concept UnaryFunction = requires(Fn fn, uintmax_t id,
+                                 double operands, double* result)
+{
+    fn(id, operands, result) == bool();
+};
+
+template<typename Fn>
+concept BinaryFunction = requires(Fn fn, uintmax_t id,
+                                  double operands, double* result)
+{
+    fn(id, operands, operands, result) == bool();
+};
+
+template<typename Fn>
+concept OperationFunction = UnaryFunction<Fn> || BinaryFunction<Fn>;
+
+template<OperationFunction auto fn>
+class [[nodiscard]] operation
 {
 public:
+    [[nodiscard]]
     auto query_operation() const -> result<uintmax_t>
     {
         uintmax_t operand_count = 0U;
@@ -22,13 +43,15 @@ public:
         return {ok, operand_count};
     }
 
-    template<class... Args>
-    auto test(Args&&... args) const -> result<double>
+    [[nodiscard]]
+    auto operator()(Operand auto&&... operands) const -> result<double>
     {
-        if (query_operation().expect(m_operands))
+        if (query_operation().expect(m_operands).also_is(sizeof...(operands)))
         {
             double value = 0.0;
-            const bool ok = fn(m_id, std::forward<Args>(args)..., &value);
+            bool const ok = fn(m_id,
+                               std::forward<decltype(operands)>(operands)...,
+                               &value);
 
             return {ok, value};
         }
@@ -47,14 +70,14 @@ private:
     const uintmax_t m_operands = 0U;
 };
 
-class binary_operation : public operation<run_binary>
+class [[nodiscard]] binary_operation : public operation<run_binary>
 {
 public:
     constexpr binary_operation(uintmax_t id)
         : operation{id, OP_IN_BINARY} { }
 };
 
-class unary_operation : public operation<run_unary>
+class [[nodiscard]] unary_operation : public operation<run_unary>
 {
 public:
     constexpr unary_operation(uintmax_t id)
@@ -74,12 +97,12 @@ BOOST_AUTO_TEST_SUITE(calculadora)
 
 BOOST_AUTO_TEST_CASE(operations)
 {
-    BOOST_CHECK(operation::add.test(10.0, 10.0).expect( 20.0));
-    BOOST_CHECK(operation::sub.test(30.0, 15.0).expect( 15.0));
-    BOOST_CHECK(operation::mul.test(20.0, 20.0).expect(400.0));
-    BOOST_CHECK(operation::div.test(60.0, 12.0).expect(  5.0));
+    BOOST_CHECK(operation::add(10.0, 10.0).expect( 20.0));
+    BOOST_CHECK(operation::sub(30.0, 15.0).expect( 15.0));
+    BOOST_CHECK(operation::mul(20.0, 20.0).expect(400.0));
+    BOOST_CHECK(operation::div(60.0, 12.0).expect(  5.0));
 
-    BOOST_CHECK(operation::fib.test(9.0).expect(34.0));
+    BOOST_CHECK(operation::fib(9.0).expect(34.0));
 }
 
 BOOST_AUTO_TEST_SUITE_END()

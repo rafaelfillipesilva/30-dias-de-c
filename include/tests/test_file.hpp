@@ -9,12 +9,32 @@
 
 namespace tests_30dc {
 
-class test_file
+template<typename T>
+concept TestContainer = requires(T data)
+{
+    std::is_trivially_copyable_v<typename T::value_type>;
+
+    data.data();
+    std::is_convertible_v<decltype(data.data()), void*>;
+
+    data.size() == typename T::size_type();
+};
+
+template<typename T>
+concept TestMutableContainer = requires(T data)
+{
+    TestContainer<T>;
+
+    data.resize(typename T::size_type());
+};
+
+class [[nodiscard]] test_file
 {
 public:
     test_file(std::FILE* fd)
         : m_fd{fd} { }
 
+    [[nodiscard]]
     auto fd() const -> std::FILE*
     {
         return m_fd;
@@ -30,31 +50,29 @@ public:
         std::rewind(m_fd);
     }
 
-    template<class T = std::string>
-    auto read(std::size_t buffer_size = 256U) -> T
+    template<TestMutableContainer T = std::string>
+    [[nodiscard]]
+    auto read(typename T::size_type buffer_size = 256u) -> T
     {
         if (!m_fd)
         {
             throw std::runtime_error{"Invalid file descriptior."};
         }
 
-        using byte_type = typename T::value_type;
-
-        static_assert(std::is_trivially_copyable_v<byte_type>,
-                      "T::value_type is not trivially copyable.");
-
         T data;
+
+        using byte_type = typename T::value_type;
         constexpr auto byte_size = sizeof(byte_type);
 
         while (!std::feof(m_fd))
         {
-            auto offset = data.size();
+            auto const offset = data.size();
 
             data.resize(offset + buffer_size);
 
-            auto n = std::fread(data.data() + offset,
-                                byte_size, buffer_size,
-                                m_fd);
+            auto const n = std::fread(data.data() + offset,
+                                      byte_size, buffer_size,
+                                      m_fd);
 
             if (n < buffer_size)
             {
@@ -71,8 +89,8 @@ public:
         return data;
     }
 
-    template<class T = std::string_view>
-    auto write(const T& data)
+    template<TestContainer T = std::string_view>
+    auto write(T const& data)
     {
         if (!m_fd)
         {
@@ -80,10 +98,6 @@ public:
         }
 
         using byte_type = typename T::value_type;
-
-        static_assert(std::is_trivially_copyable_v<byte_type>,
-                      "T::value_type is not trivially copyable.");
-
         constexpr auto byte_size = sizeof(byte_type);
 
         return std::fwrite(data.data(), byte_size, data.size(), m_fd);

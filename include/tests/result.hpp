@@ -7,8 +7,8 @@
 
 namespace tests_30dc {
 
-template<class T>
-class result
+template<typename T>
+class [[nodiscard]] result
 {
 public:
     constexpr result()
@@ -20,7 +20,9 @@ public:
     constexpr result(bool ok, T value)
         : m_ok{ok}, m_value{std::move(value)} { }
 
-    template<class Fn>
+    template<typename Fn>
+    requires std::is_invocable_v<Fn, T const>
+    [[nodiscard]]
     constexpr auto transform(Fn fn) const
     {
         using result_type = result<decltype(fn(m_value))>;
@@ -35,34 +37,48 @@ public:
         }
     }
 
-    template<class U>
-    constexpr auto expect(const U& check) const -> bool
+    [[nodiscard]]
+    constexpr auto expect(auto const& check) const -> result<T>
     {
         if constexpr (std::is_floating_point_v<T>)
         {
             constexpr auto epsilon = std::numeric_limits<T>::epsilon();
-            return (pass() && (std::fabs(m_value - check) <= epsilon));
+            return {pass() && (std::fabs(m_value - check) <= epsilon), m_value};
         }
         else
         {
-            return (pass() && (m_value == check));
+            return {pass() && (m_value == check), m_value};
         }
     }
 
-    template<class U>
-    constexpr auto is_not(const U& check) const -> bool
+    [[nodiscard]]
+    constexpr auto also_is(auto const& check) const -> result<T>
+    {
+        return expect(check);
+    }
+
+    [[nodiscard]]
+    constexpr auto is_not(auto const& check) const -> bool
     {
         return !expect(check);
     }
 
+    [[nodiscard]]
     constexpr auto pass() const -> bool
     {
         return m_ok;
     }
 
+    [[nodiscard]]
     constexpr auto fail() const -> bool
     {
         return !pass();
+    }
+
+    [[nodiscard]]
+    explicit constexpr operator bool() const
+    {
+        return pass();
     }
 
 private:

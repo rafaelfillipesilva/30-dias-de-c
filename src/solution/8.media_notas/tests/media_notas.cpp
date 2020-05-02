@@ -15,7 +15,7 @@ BOOST_AUTO_TEST_CASE(average)
         constexpr auto count = sizeof...(marks);
         static_assert(count > 0U, "Requires at least one mark.");
 
-        std::array<double, count> arr{std::forward<decltype(marks)>(marks)...};
+        std::array<double, count> arr{marks...};
         return ::calc_average(arr.data(), arr.size());
     };
 

@@ -8,8 +8,14 @@
 
 namespace tests_30dc {
 
-template<class Deleter>
-class temporary_file
+template<typename Deleter>
+concept FileDeleter = requires(Deleter deleter, std::FILE* fd)
+{
+    deleter(fd);
+};
+
+template<FileDeleter Deleter>
+class [[nodiscard]] temporary_file
 {
 public:
     explicit temporary_file(std::unique_ptr<std::FILE, Deleter> file)
@@ -21,6 +27,7 @@ public:
     temporary_file(const temporary_file&) = delete;
     temporary_file& operator=(const temporary_file&) = delete;
 
+    [[nodiscard]]
     auto get_fd() -> std::FILE*
     {
         if (!m_file)
@@ -35,12 +42,13 @@ private:
     std::unique_ptr<std::FILE, Deleter> m_file;
 };
 
+[[nodiscard]]
 auto make_temporary_file()
 {
     namespace bfs = boost::filesystem;
 
     constexpr auto pattern = "io-30dc_%%%%-%%%%-%%%%-%%%%";
-    auto path = bfs::temp_directory_path() / bfs::unique_path(pattern);
+    auto const path = bfs::temp_directory_path() / bfs::unique_path(pattern);
 
     auto fd = std::fopen(path.c_str(), "w+x");
 
@@ -49,9 +57,9 @@ auto make_temporary_file()
         throw std::runtime_error{"Failed to open the temporary file."};
     }
 
-    std::string path_str = path.string();
+    auto const path_str = std::string(path.string());
 
-    auto deleter = [path_str](std::FILE* file)
+    FileDeleter auto deleter = [path_str](std::FILE* file)
     {
         if (file)
         {

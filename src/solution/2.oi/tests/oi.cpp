@@ -43,7 +43,7 @@ BOOST_AUTO_TEST_CASE(very_long_input)
 
     // Expected failure, long_output should contain truncated long_input.
     BOOST_CHECK(expect_io(std::move(long_input),
-                          std::move(long_output)).fail(run_oi));
+                          std::move(long_output)).mismatch(run_oi));
 }
 
 BOOST_AUTO_TEST_SUITE_END()

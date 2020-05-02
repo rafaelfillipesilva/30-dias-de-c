@@ -9,12 +9,15 @@
 
 namespace tests_30dc {
 
-template<class Fn>
-auto test_output(Fn fn) -> result<std::string>
+template<typename Fn>
+concept OutTestFn = requires(Fn fn, std::FILE* out)
 {
-    static_assert(std::is_invocable_v<Fn, FILE*>,
-                  "Requires a function Fn(FILE* out).");
+    fn(out);
+};
 
+[[nodiscard]]
+auto test_output(OutTestFn auto fn) -> result<std::string>
+{
     auto tmp_output = make_temporary_file();
 
     auto out = test_file{tmp_output.get_fd()};

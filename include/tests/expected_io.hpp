@@ -10,12 +10,15 @@
 
 namespace tests_30dc {
 
-template<class Fn>
-auto test_io(std::string_view data, Fn fn) -> result<std::string>
+template<typename Fn>
+concept IOTestFn = requires(Fn fn, std::FILE* in, std::FILE* out)
 {
-    static_assert(std::is_invocable_v<Fn, FILE*, FILE*>,
-                  "Requires a function Fn(FILE* in, FILE* out).");
+    fn(in, out);
+};
 
+[[nodiscard]]
+auto test_io(std::string_view data, IOTestFn auto fn) -> result<std::string>
+{
     auto tmp_input  = make_temporary_file();
     auto tmp_output = make_temporary_file();
 
@@ -31,19 +34,19 @@ auto test_io(std::string_view data, Fn fn) -> result<std::string>
     return {out.read()};
 }
 
-struct expect_io
+struct [[nodiscard]] expect_io
 {
     expect_io(std::string in, std::string out)
         : m_in{std::move(in)}, m_out{std::move(out)} { }
 
-    template<class Fn>
-    auto test(Fn fn) -> bool
+    [[nodiscard]]
+    auto test(IOTestFn auto fn) -> bool
     {
-        return test_io(m_in, fn).expect(m_out);
+        return test_io(m_in, fn).expect(m_out).pass();
     }
 
-    template<class Fn>
-    auto fail(Fn fn) -> bool
+    [[nodiscard]]
+    auto mismatch(IOTestFn auto fn) -> bool
     {
         return !test(fn);
     }
