@@ -14,6 +14,7 @@ public:
     constexpr result()
         : m_ok{false} { }
 
+    explicit(!std::is_fundamental_v<T>)
     constexpr result(T value)
         : m_ok{true}, m_value{std::move(value)} { }
 

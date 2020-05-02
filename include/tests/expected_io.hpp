@@ -31,7 +31,7 @@ auto test_io(std::string_view data, IOTestFn auto fn) -> result<std::string>
     fn(in.fd(), out.fd());
     out.rewind();
 
-    return {out.read()};
+    return result{out.read()};
 }
 
 struct [[nodiscard]] expect_io

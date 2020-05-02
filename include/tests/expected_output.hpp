@@ -25,7 +25,7 @@ auto test_output(OutTestFn auto fn) -> result<std::string>
     fn(out.fd());
     out.rewind();
 
-    return {out.read()};
+    return result{out.read()};
 }
 
 } // namespace tests_30dc

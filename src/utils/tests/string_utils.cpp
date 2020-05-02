@@ -14,7 +14,7 @@ BOOST_AUTO_TEST_CASE(rtrim_newline)
     auto rtrim_newline = [](std::string str) -> result<std::string>
     {
         ::rtrim_newline(str.data(), str.size());
-        return {str.c_str()};
+        return result{std::string{str.c_str()}};
     };
 
     BOOST_CHECK(rtrim_newline("test\r\n").expect("test"));
