@@ -23,8 +23,7 @@ bool parse_age(char const* age_str, size_t buffer_size, uint16_t* age_out)
 
 bool can_drink(uint16_t age)
 {
-    return (age >= ADULT_AGE) ? true
-                              : false;
+    return (age >= ADULT_AGE);
 }
 
 void run_pode_beber()
