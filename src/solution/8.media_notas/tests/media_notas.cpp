@@ -10,17 +10,15 @@ BOOST_AUTO_TEST_SUITE(media_notas)
 
 BOOST_AUTO_TEST_CASE(average)
 {
-    auto calc_average = [](auto&&... marks) -> result<double>
+    auto calc_average = []<std::size_t N>(std::array<double, N> marks)
+                        -> result<double>
     {
-        constexpr auto count = sizeof...(marks);
-        static_assert(count > 0u, "Requires at least one mark.");
-
-        std::array<double, count> arr{marks...};
-        return ::calc_average(arr.data(), arr.size());
+        static_assert(N > 0u, "Requires at least one mark.");
+        return {::calc_average(marks.data(), marks.size())};
     };
 
-    BOOST_CHECK(calc_average(1.0, 2.0, 3.0, 4.0,  5.0,
-                             6.0, 7.0, 8.0, 9.0, 10.0).expect(5.5));
+    BOOST_CHECK(calc_average(std::array{1.0, 2.0, 3.0, 4.0,  5.0,
+                                        6.0, 7.0, 8.0, 9.0, 10.0}).expect(5.5));
 }
 
 BOOST_AUTO_TEST_SUITE_END()
