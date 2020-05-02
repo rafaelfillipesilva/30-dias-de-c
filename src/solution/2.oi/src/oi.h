@@ -3,7 +3,7 @@
 
 #include <stdio.h>
 
-#define MAX_NAME_LENGTH 256U
+#define MAX_NAME_LENGTH 256u
 
 #ifdef __cplusplus
 extern "C" {

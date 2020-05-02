@@ -37,8 +37,7 @@ public:
     [[nodiscard]]
     auto query_operation() const -> result<uintmax_t>
     {
-        uintmax_t operand_count = 0U;
-        const bool ok = ::query_operation(m_id, &operand_count);
+        uintmax_t operand_count = 0u;
 
         return {ok, operand_count};
     }

@@ -79,7 +79,7 @@ public:
                 // Shrink from grown size to n-read size.
                 data.resize(offset + (n * byte_size));
 
-                if (n == 0U)
+                if (n == 0u)
                 {
                     break;
                 }

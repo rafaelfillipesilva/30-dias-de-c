@@ -8,7 +8,7 @@
 bool get_number(char* buffer, size_t buffer_size, double* number)
 {
     assert((buffer != NULL) && (number != NULL));
-    assert(buffer_size >= 2U);
+    assert(buffer_size >= 2u);
 
     bool success = false;
 
@@ -39,7 +39,7 @@ bool get_number(char* buffer, size_t buffer_size, double* number)
 bool get_ponto(char* buffer, size_t buffer_size, struct ponto* ponto)
 {
     assert((buffer != NULL) && (ponto != NULL));
-    assert(buffer_size >= 2U);
+    assert(buffer_size >= 2u);
 
     bool success = false;
 
@@ -79,7 +79,7 @@ double calcular_distancia(struct ponto a, struct ponto b)
 
 void run_pontos()
 {
-    static_assert(MAX_NUMBER_LENGTH >= 2U, "Invalid buffer size.");
+    static_assert(MAX_NUMBER_LENGTH >= 2u, "Invalid buffer size.");
 
     char buffer[MAX_NUMBER_LENGTH] = { '\0' };
 

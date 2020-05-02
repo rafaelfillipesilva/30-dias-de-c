@@ -4,7 +4,7 @@
 #include <stdbool.h>
 #include <stdint.h>
 
-#define MAX_NUMBER_LENGTH 32U
+#define MAX_NUMBER_LENGTH 32u
 
 #ifdef __cplusplus
 extern "C" {

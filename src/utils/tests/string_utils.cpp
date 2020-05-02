@@ -24,17 +24,16 @@ BOOST_AUTO_TEST_CASE(count_nonspace)
 {
     auto count_nonspace = [](std::string_view str) -> result<size_t>
     {
-        size_t count = 0;
-        const bool ok = ::count_nonspace(str.data(), str.size() + 1U, &count);
+        size_t count = 0u;
 
         return {ok, count};
     };
 
-    BOOST_CHECK(count_nonspace("test").expect(4U));
-    BOOST_CHECK(count_nonspace("  test  \r\n").expect(4U));
-    BOOST_CHECK(count_nonspace("te st").expect(4U));
-    BOOST_CHECK(count_nonspace("").expect(0U));
-    BOOST_CHECK(count_nonspace("  \r\n").expect(0U));
+    BOOST_CHECK(count_nonspace("test").expect(4u));
+    BOOST_CHECK(count_nonspace("  test  \r\n").expect(4u));
+    BOOST_CHECK(count_nonspace("te st").expect(4u));
+    BOOST_CHECK(count_nonspace("").expect(0u));
+    BOOST_CHECK(count_nonspace("  \r\n").expect(0u));
 }
 
 BOOST_AUTO_TEST_CASE(parse_signed)
@@ -65,14 +64,13 @@ BOOST_AUTO_TEST_CASE(parse_unsigned)
 {
     auto parse_unsigned = [](std::string_view str) -> result<uintmax_t>
     {
-        uintmax_t value = 0;
-        const bool ok = ::parse_unsigned(str.data(), str.size() + 1U, &value);
+        uintmax_t value = 0u;
 
         return {ok, value};
     };
 
-    BOOST_CHECK(parse_unsigned("20").expect(20U));
-    BOOST_CHECK(parse_unsigned("  20  \r\n").expect(20U));
+    BOOST_CHECK(parse_unsigned("20").expect(20u));
+    BOOST_CHECK(parse_unsigned("  20  \r\n").expect(20u));
     BOOST_CHECK(parse_unsigned("20 20").fail());
     BOOST_CHECK(parse_unsigned("").fail());
     BOOST_CHECK(parse_unsigned("  \r\n").fail());
@@ -89,8 +87,7 @@ BOOST_AUTO_TEST_CASE(parse_double)
 {
     auto parse_double = [](std::string_view str) -> result<double>
     {
-        double value = 0;
-        const bool ok = ::parse_double(str.data(), str.size() + 1U, &value);
+        double value = 0.0;
 
         return {ok, value};
     };

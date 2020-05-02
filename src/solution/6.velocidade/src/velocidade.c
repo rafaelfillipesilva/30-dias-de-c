@@ -13,7 +13,7 @@ double mps_to_kmph(double mps)
 
 void run_velocidade()
 {
-    static_assert(MAX_NUMBER_LENGTH >= 2U, "Invalid buffer size.");
+    static_assert(MAX_NUMBER_LENGTH >= 2u, "Invalid buffer size.");
 
     printf("Digite a velocidade (em m/s): ");
 

@@ -7,12 +7,12 @@
 
 /* Minimum expected age format size:
    [0-999+]:3 + '\n':4 + '\0':5 */
-#define MIN_AGE_LENGTH 5U
+#define MIN_AGE_LENGTH 5u
 
 /* Extra length allows ignoring space (see: isspace()) characters. */
-#define MAX_AGE_LENGTH 32U
+#define MAX_AGE_LENGTH 32u
 
-#define ADULT_AGE 18U
+#define ADULT_AGE 18u
 
 #define MAX_AGE UINT16_MAX
 

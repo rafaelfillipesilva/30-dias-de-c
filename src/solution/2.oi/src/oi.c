@@ -4,7 +4,7 @@
 
 void run_oi(FILE* in, FILE* out)
 {
-    static_assert(MAX_NAME_LENGTH >= 2U, "Invalid buffer size.");
+    static_assert(MAX_NAME_LENGTH >= 2u, "Invalid buffer size.");
     assert((in != NULL) && (out != NULL));
 
     fprintf(out, "Digite seu nome: ");
@@ -16,12 +16,11 @@ void run_oi(FILE* in, FILE* out)
     {
         rtrim_newline(name, MAX_NAME_LENGTH);
 
-        size_t length = 0U;
-        const bool count_ok = count_nonspace(name, MAX_NAME_LENGTH, &length);
+        size_t length = 0u;
 
         if (count_ok)
         {
-            if (length > 0U)
+            if (length > 0u)
             {
                 fprintf(out, "Oi, %s", name);
             }

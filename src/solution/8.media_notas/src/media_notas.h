@@ -3,9 +3,9 @@
 
 #include <stddef.h>
 
-#define MAX_NUMBER_LENGTH 32U
+#define MAX_NUMBER_LENGTH 32u
 
-#define MARK_COUNT 10U
+#define MARK_COUNT 10u
 
 #ifdef __cplusplus
 extern "C" {
