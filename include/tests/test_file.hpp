@@ -10,22 +10,22 @@
 namespace tests_30dc {
 
 template<typename T>
-concept TestContainer = requires(T data)
+concept TestContainer = requires(T container)
 {
     std::is_trivially_copyable_v<typename T::value_type>;
 
-    data.data();
-    std::is_convertible_v<decltype(data.data()), void*>;
+    container.data();
+    std::is_convertible_v<decltype(container.data()), void*>;
 
-    data.size() == typename T::size_type();
+    container.size() == typename T::size_type();
 };
 
 template<typename T>
-concept TestMutableContainer = requires(T data)
+concept TestMutableContainer = requires(T container)
 {
     TestContainer<T>;
 
-    data.resize(typename T::size_type());
+    container.resize(typename T::size_type());
 };
 
 class [[nodiscard]] test_file
